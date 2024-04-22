@@ -4,9 +4,15 @@ require_once $chemin_sous_dossier . "nav.php";
 $pageTitre = "Inscriptions";
 $metaDescription = " ....";
 require_once $chemin_sous_dossier . "header.php";
+echo
+"<h1>Données du serveur</h1>";
 require_once $chemin_sous_function . "DB_connexion.php";
-// echo inscriptions("pseudo","Email","mdp");
 echo donnée_du_serveur();
+echo
+"<h1>Function Inscriptions</h1>";
+require_once $chemin_sous_function . "functionsInscriptions.php";
+// echo inscriptions("pseudo","Email","mdp");
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -22,9 +28,9 @@ echo donnée_du_serveur();
     <H1>inscriptions</H1>
 
     <form action="" method="POST">
-        <label for="pseudo"> Votre Pseudo :</label>
-        <input type="text" name="pseudo" id="pseudo" placeholder="Votre Pseudo" minlength="2" maxlength="255" value="<?php echo $args["valeurNetoyee"]["pseudo"] ?? '' ?>">
-        <p class="erreur"><?php echo $args["erreurs"]["pseudo"] ?? '' ?></p>
+        <label for="Pseudo"> Votre Pseudo :</label>
+        <input type="text" name="Pseudo" id="pseudo" placeholder="Votre Pseudo" minlength="2" maxlength="255" value="<?php echo $args["valeurNetoyee"]["Pseudo"] ?? '' ?>">
+        <p class="erreur"><?php echo $args["erreurs"]["Pseudo"] ?? '' ?></p>
 
 
         <label for="temail">Adresse émail :</label>
@@ -33,14 +39,14 @@ echo donnée_du_serveur();
 
 
         <label for="mdp">Votre mdp :</label>
-        <input type="password" name="mot de passe" id="mdp" minlength="2" maxlength="72" placeholder="Votre mot de passe " value="<?php echo $args["valeurNetoyee"]["mot de passe"] ?? '' ?>">
-        <p class="erreur"><?php echo $args["erreurs"]["mot de passe"] ?? '' ?></p>
+        <input type="password" name="Code" id="mdp" minlength="2" maxlength="72" placeholder="Votre mot de passe ">
+        <p class="erreur"><?php echo $args["erreurs"]["Code"] ?? '' ?></p>
 
 
 
         <label for="mdp_confirm">Votre mdp Confirm :</label>
-        <input type="password" name="Confirmation" id="mdp_confirm" minlength="2" maxlength="72" placeholder="Confirmation mot de passe " value="<?php echo $args["valeurNetoyee"]["Confirmation"] ?? '' ?>">
-        <p class="erreur"><?php echo $args["erreurs"]["Confirmation"] ?? '' ?></p>
+        <input type="password" name="Confirmations" id="mdp_confirm" minlength="2" maxlength="72" placeholder="Confirmation mot de passe ">
+        <p class="erreur"><?php echo $args["erreurs"]["Confirmations"] ?? '' ?></p>
 
 
         <input type="submit" value="Envoier">

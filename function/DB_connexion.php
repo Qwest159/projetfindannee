@@ -61,7 +61,7 @@ function donnée_du_serveur()
             <?php
             foreach ($utilisateurs as $utilisateur) {
             ?>
-                <li>Pseudo : <?= $utilisateur['uti_pseudo'] ?>, E-mail : <?= $utilisateur['uti_email'] ?></li>
+                <li>Pseudo : <?= $utilisateur['uti_pseudo'] ?>, E-mail : <?= $utilisateur['uti_email'] ?>, Mot de passe : <?= $utilisateur['uti_motdepasse'] ?> </li>
             <?php
             }
             ?>
@@ -72,7 +72,7 @@ function donnée_du_serveur()
 }
 
 
-function inscriptions($pseudo, $email, $mdp)
+function inscriptions($args)
 {
     if ($_SERVER["REQUEST_METHOD"] === "POST") {
         try {
@@ -85,9 +85,9 @@ function inscriptions($pseudo, $email, $mdp)
 
             // Lier les variables aux marqueurs :
 
-            $stmt->bindValue(':pseudo', $_POST[$pseudo], PDO::PARAM_STR);
-            $stmt->bindValue(':email', $_POST[$email], PDO::PARAM_STR);
-            $stmt->bindValue(':mdp', $_POST[$mdp], PDO::PARAM_STR);
+            $stmt->bindValue(':pseudo', $args["valeurNetoyee"]["Pseudo"], PDO::PARAM_STR);
+            $stmt->bindValue(':email', $args["valeurNetoyee"]["Email"], PDO::PARAM_STR);
+            $stmt->bindValue(':mdp', $args["valeurNetoyee"]["Code"], PDO::PARAM_STR);
 
             // Exécuter la requête.
             $stmt->execute();
@@ -97,5 +97,3 @@ function inscriptions($pseudo, $email, $mdp)
     }
 }
 ?>
-
-<h1>Données du serveur</h1>

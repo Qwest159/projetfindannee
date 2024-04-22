@@ -1,29 +1,29 @@
 <?php
-// echo '<pre>' . print_r($keys, true) . '</pre>';
+// echo '<pre>' . print_r($args, true) . '</pre>';
 $TableauxRegles = [
-    // ATTENTION la key $TableauxRegles dois correspondre a l'input name
-    "Nom" => [
-        "min" => 2,
-        "max" => 255,
-        "requis" => "",
-    ],
-    "Prénom" => [
+    "Pseudo" => [
         "min" => 2,
         "max" => 255,
         "requis" => "",
     ],
     "Email" => [
-        "min" => 6,
-        "max" => 320,
+        "min" => 2,
+        "max" => 255,
         "requis" => "",
-        "type" => "email"
     ],
-    "Message" => [
-        "min" => 10,
-        "max" => 3000,
-        "requis" => ""
+    "Code" => [
+        "min" => 8,
+        "max" => 72,
+        "requis" => "",
+    ],
+    "Confirmations" => [
+        "min" => 8,
+        "max" => 72,
+        "requis" => "",
+        "type" => "mdpconfirmations"
     ],
 ];
+
 
 // CONDITIONS finale pour envoier l'email ou la requete
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -34,19 +34,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         {
             $postChamp = $_POST[$nomChamp];
             $champNettoyer = netoyageCharactere($postChamp);
-            $erreur = envoie_erreur($champNettoyer, $nomChamp, $TableauxRegles);
+            $args["valeurNetoyee"][$nomChamp] = $champNettoyer;
+            $erreur = envoie_erreur($champNettoyer, $nomChamp, $TableauxRegles, $args);
             // si la function renvoie quelque chose, alors mets le dans le tableau qui correspond au nom du champs
             if (isset($erreur)) {
                 $args["erreurs"][$nomChamp] = $erreur;
             }
-            $args["valeurNetoyee"][$nomChamp] = $champNettoyer;
         } else {
             //SI le nom de l'input n'est pas le meme  => erreur autre contient"champs inconnu"
             $args["erreurs"]["autre"] = "champs inconnu";
         }
     }
     if (!isset($args["erreurs"])) { // si tableau erreur ne contient rien, alors envoie email
-        email($args["valeurNetoyee"]);
+        inscriptions($args);
         $args = [];
     }
 }
@@ -66,6 +66,10 @@ function minimum($donnée, $minimum)
     return ($longueur_mot_min < $minimum) ? true : false;
 }
 
+function ConfirmationMdp($mdp, $mdpconfirmation)
+{
+    return ($mdp === $mdpconfirmation) ? false : true;
+}
 
 //-------------REGLE POUR NETTOYAGE-----------
 
@@ -77,7 +81,7 @@ function netoyageCharactere($donnee)
 }
 
 //------------REGLES POUR VERIFIER S'IL Y A DES ERREURS------------
-function envoie_erreur($champNettoyer, $key, $TableauxRegles)
+function envoie_erreur($champNettoyer, $key, $TableauxRegles, $args)
 {
     foreach ($TableauxRegles[$key] as $regle => $valeur) {
         // verifie si la variable contien quelque chose et qu'il existe une regle avec requis
@@ -95,7 +99,12 @@ function envoie_erreur($champNettoyer, $key, $TableauxRegles)
             }
             if ($regle == "type" && $valeur == "email") {
                 if (!(filter_var($champNettoyer, FILTER_VALIDATE_EMAIL))) {
-                    return "votre $key n'est pas valide";
+                    return "Votre $key n'est pas valide";
+                }
+            }
+            if ($regle == "type" && $valeur == "mdpconfirmations") {
+                if (ConfirmationMdp($args["valeurNetoyee"]["Code"] ?? '', $champNettoyer)) {
+                    return "Votre code de $key ne correspond pas";
                 }
             }
         }
