@@ -1,14 +1,8 @@
 <?php
-// VERIF permet de verifier si les données sont correct ( longueur correct,minusculet....)
 
-// creer la fonction qui permet de recup les bonne données de verif
-// => SI elle sont bonne garde les
-// => SI TOUTE LES DONNées requise sont bonnes, alors a ce moment la tu confirme l'envoie
-// => SI c'est faut, faire un message d'erreur et demander de rectifier
-
-// htmlentities a regarder ( safe les données ()IMPORTANT)
 
 $reglesForm = [
+    // ATTENTION la key $reglesForm dois correspondre a l'input name
     "Nom" => [
         "min" => 2,
         "max" => 255,
@@ -20,7 +14,7 @@ $reglesForm = [
         "requis" => true,
     ],
     "Email" => [
-        "min" => 03,
+        "min" => 6,
         "max" => 320,
         "requis" => true,
         "type" => "email"
@@ -31,20 +25,26 @@ $reglesForm = [
         "requis" => true,
     ],
 ];
-// $Nom_Input = array_keys($reglesForm);
 
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $args = [];
-    foreach ($_POST as $key => $champ) {
-        $champNettoyer = netoyageCharactere($_POST[$key]);
-        $erreur = envoie_erreur($champNettoyer, $key, $reglesForm);
-        // $erreur = envoie_erreur($champNettoyer, $reglesForm[$key]["min"], $reglesForm[$key]["max"], $key, $reglesForm[$key]["requis"]);
-        // echo $erreur;
-        if (isset($erreur)) {
-            $args["erreurs"][$key] = $erreur;
+    foreach ($reglesForm as $nomChamp => $champ) {
+        //$nomChamp=
+        if (isset($_POST[$nomChamp])) // recupere la valeur de l'input qui fait reference au Nom de chaque parametre tableau
+        {
+            $postChamp = $_POST[$nomChamp];
+            $champNettoyer = netoyageCharactere($postChamp);
+            $erreur = envoie_erreur($champNettoyer, $nomChamp, $reglesForm);
+            // $erreur = envoie_erreur($champNettoyer, $reglesForm[$key]["min"], $reglesForm[$key]["max"], $key, $reglesForm[$key]["requis"]);
+            // echo $erreur;
+            if (isset($erreur)) {
+                $args["erreurs"][$nomChamp] = $erreur;
+            }
+            $args["valeurNetoyee"][$nomChamp] = $champNettoyer;
+        } else {
+            $args["erreurs"]["autre"] = "champs inconnu";
         }
-        $args["valeurNetoyee"][$key] = $champNettoyer;
     }
     // $nom = =netoyageCharactere($_POST["nom"]);
     // $recupname=message_erreur($nom,2,255);
@@ -65,11 +65,13 @@ function maximum($donnée, $maximum)
     return ($longueur_mot_max > $maximum) ? true : false;
 }
 
+// fonction qui recoit une $donnée et verifier si sa taille est de $minimum
 function minimum($donnée, $minimum)
 {
     $longueur_mot_min = mb_strlen($donnée, 'UTF-8');
     return ($longueur_mot_min < $minimum) ? true : false;
 }
+
 function netoyageCharactere($donnee)
 {
     $donnee = trim($donnee);
@@ -80,20 +82,18 @@ function netoyageCharactere($donnee)
 function envoie_erreur($champNettoyer, $key, $reglesForm)
 {
     foreach ($reglesForm[$key] as $regle => $valeur) {
+        // verifie si la variable contien qqch
         if (empty($champNettoyer) || !isset($champNettoyer)) {
             if ($regle == "requis") {
                 return "Votre $key est manquant";
             }
         } else {
-            if ($regle == "min") {
-                if (minimum($champNettoyer, $valeur)) {
-                    return "Votre $key doit etre de minimum $valeur caractere";
-                }
+            // les regles du form
+            if ($regle == "min" && minimum($champNettoyer, $valeur)) {
+                return "Votre $key doit etre de minimum $valeur caractere";
             }
-            if ($regle == "max") {
-                if (maximum($champNettoyer, $valeur)) {
-                    return "Votre $key doit etre de maximum $valeur caractere";
-                }
+            if ($regle == "max" && maximum($champNettoyer, $valeur)) {
+                return "Votre $key doit etre de maximum $valeur caractere";
             }
             if ($regle == "type" && $valeur == "email") {
                 if (!(filter_var($champNettoyer, FILTER_VALIDATE_EMAIL))) {
@@ -132,24 +132,20 @@ function envoie_erreur($champNettoyer, $key, $reglesForm)
 //     }
 // }
 
-// function erreur($donnée,$minimum,$maximum)
+// function erreur($donnée, $minimum, $maximum)
 // {
-//     if ($_SERVER["REQUEST_METHOD"] === "POST")
-//     {   
-//         if(empty(trim($donnée)))
-//         {
-//               return true;
+//     if ($_SERVER["REQUEST_METHOD"] === "POST") {
+//         if (empty(trim($donnée))) {
+//             return true;
 //         }
-//         if(maximum($donnée,$maximum))
-//         {
-//              return true;
+//         if (maximum($donnée, $maximum)) {
+//             return true;
 //         }
-//         if(minimum($donnée,$minimum))
-//         {
-//              return true;
-//         }  
+//         if (minimum($donnée, $minimum)) {
+//             return true;
+//         }
 //     }
-// }  
+// }
 
 // $affiche =  "votre $name est :" . $_POST[$name] . "\n";
 // $afffiche_balise = nl2br($affiche); // permet d'obliger les utilisations balise html(<br>,\n,....) ecrit en php
