@@ -2,7 +2,6 @@ h1,
 p,
 .active,
 span,
-.erreur,
 legend,
 fieldset {
   color: rgb(255, 255, 255);
@@ -14,27 +13,13 @@ body {
 input {
   margin: 0.5em;
 }
-
+.erreur {
+  color: red;
+}
 /* 
-h1,p,.active,span,.erreur
-{
-    color: red;
-}
-p
-{
-    color: rgb(0, 118, 154);
-}
-span
-{
-    color: rgb(0, 255, 0);
-}
+
 .active
 {
     color: rgb(60, 255, 0);
 }
-.erreur
-{
-    color: red;
-    margin: 0;
-    margin-top: 0.5rem;
-} */
+ */

@@ -1,59 +1,52 @@
 <?php
 
 
-$reglesForm = [
-    // ATTENTION la key $reglesForm dois correspondre a l'input name
+$TableauxRegles = [
+    // ATTENTION la key $TableauxRegles dois correspondre a l'input name
     "Nom" => [
         "min" => 2,
         "max" => 255,
-        "requis" => true,
+        "requis" => "",
     ],
     "Prénom" => [
         "min" => 2,
         "max" => 255,
-        "requis" => true,
+        "requis" => "",
     ],
     "Email" => [
         "min" => 6,
         "max" => 320,
-        "requis" => true,
+        "requis" => "",
         "type" => "email"
     ],
     "Message" => [
         "min" => 10,
         "max" => 3000,
-        "requis" => true,
+        "requis" => ""
     ],
 ];
 
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $args = [];
-    foreach ($reglesForm as $nomChamp => $champ) {
-        //$nomChamp=
-        if (isset($_POST[$nomChamp])) // recupere la valeur de l'input qui fait reference au Nom de chaque parametre tableau
+    foreach ($TableauxRegles as $nomChamp => $champ) {
+
+        if (isset($_POST[$nomChamp])) // Si il y a une donnée qui correspond a la valeur du tableau(Nom,Prenom,Email....) alors rentre ici
         {
             $postChamp = $_POST[$nomChamp];
             $champNettoyer = netoyageCharactere($postChamp);
-            $erreur = envoie_erreur($champNettoyer, $nomChamp, $reglesForm);
-            // $erreur = envoie_erreur($champNettoyer, $reglesForm[$key]["min"], $reglesForm[$key]["max"], $key, $reglesForm[$key]["requis"]);
-            // echo $erreur;
+            $erreur = envoie_erreur($champNettoyer, $nomChamp, $TableauxRegles);
+            // si la function renvoie quelque chose, alors mets le dans le tableau qui correspond au nom du champs
             if (isset($erreur)) {
                 $args["erreurs"][$nomChamp] = $erreur;
             }
             $args["valeurNetoyee"][$nomChamp] = $champNettoyer;
         } else {
+            //SI le nom de l'input n'est pas le meme  => erreur autre contient"champs inconnu"
             $args["erreurs"]["autre"] = "champs inconnu";
         }
     }
-    // $nom = =netoyageCharactere($_POST["nom"]);
-    // $recupname=message_erreur($nom,2,255);
-
-    // $recupprenom=message_erreur("Prénom",2,255);
-    // $recupemail=message_erreur("Email",1,255);
-    // $recupmessage=message_erreur("Message",10,3000);
-
-    if (!isset($args["erreurs"])) {
+    if (!isset($args["erreurs"])) { // si tableau erreur ne contient rien, alors envoie email
         email($args["valeurNetoyee"]);
         $args = [];
     }
@@ -79,10 +72,10 @@ function netoyageCharactere($donnee)
     return $donnee;
 }
 
-function envoie_erreur($champNettoyer, $key, $reglesForm)
+function envoie_erreur($champNettoyer, $key, $TableauxRegles)
 {
-    foreach ($reglesForm[$key] as $regle => $valeur) {
-        // verifie si la variable contien qqch
+    foreach ($TableauxRegles[$key] as $regle => $valeur) {
+        // verifie si la variable contien quelque chose et qu'il existe une regle avec requis
         if (empty($champNettoyer) || !isset($champNettoyer)) {
             if ($regle == "requis") {
                 return "Votre $key est manquant";
@@ -103,73 +96,7 @@ function envoie_erreur($champNettoyer, $key, $reglesForm)
         }
     }
 }
-
 // echo '<pre>' . print_r($keys, true) . '</pre>';
-
-
-
-
-// function envoie_formulaire($args)
-// {
-//     if ($_SERVER["REQUEST_METHOD"] === "POST") {
-//         // si toutes mes données retourne true ( et donc ma fonction verif retourne true => pas d'erreur)
-//         $erreursString = "";
-//         foreach ($_POST as $key => $champs) {
-//             $erreurs[] = $args["erreurs"][$key];
-//             $erreursString = implode("", $erreurs);
-//         }
-//         // echo '<pre>' . print_r(($args["valeurNetoyee"]["Nom"]), true) . '</pre>';
-//         // echo $erreursString;
-
-//         if (empty($erreursString)) {
-//             echo 'Message envoié';
-//             // email($args["valeurNetoyee"]["Nom"], $args["valeurNetoyee"]["Prénom"], $args["valeurNetoyee"]["Email"], $args["valeurNetoyee"]["Message"]);
-//             $args = [];
-//         } else {
-//             // si il y a des erreurs:
-//             echo "Veuillez remplir tous les champs manquants ou erronées";
-//         }
-//     }
-// }
-
-// function erreur($donnée, $minimum, $maximum)
-// {
-//     if ($_SERVER["REQUEST_METHOD"] === "POST") {
-//         if (empty(trim($donnée))) {
-//             return true;
-//         }
-//         if (maximum($donnée, $maximum)) {
-//             return true;
-//         }
-//         if (minimum($donnée, $minimum)) {
-//             return true;
-//         }
-//     }
-// }
-
-// $affiche =  "votre $name est :" . $_POST[$name] . "\n";
-// $afffiche_balise = nl2br($affiche); // permet d'obliger les utilisations balise html(<br>,\n,....) ecrit en php
-// echo $afffiche_balise;
-
-
-// function verif($name,$minimum,$maximum)
-// {
-//     if ($_SERVER["REQUEST_METHOD"] === "POST")
-//     {
-//         $donnée_safe=netoyageCharactere($_POST[$name]);
-//         $erreur = erreur($donnée_safe,$minimum,$maximum); 
-//                 if ($erreur)
-//                 {
-//                     // si erreur, retourne false
-//                     return false;
-//                 }
-//                 else
-//                 // S'IL N'A PLUS D'ERREUR ALORS C'EST BON
-//                 {
-//                     return true;
-//                 }
-//     }   
-// }
 
 function email($args)
 {
