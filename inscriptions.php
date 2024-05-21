@@ -8,11 +8,8 @@ echo
 "<h1>Données du serveur</h1>";
 require_once $chemin_sous_function . "DB_connexion.php";
 echo donnée_du_serveur();
-echo
-"<h1>Function Inscriptions</h1>";
+echo "<h1>Function Inscriptions</h1>";
 require_once $chemin_sous_function . "functionsInscriptions.php";
-// echo inscriptions("pseudo","Email","mdp");
-
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -29,12 +26,13 @@ require_once $chemin_sous_function . "functionsInscriptions.php";
 
     <form action="" method="POST">
         <label for="Pseudo"> Votre Pseudo :</label>
-        <input type="text" name="Pseudo" id="pseudo" placeholder="Votre Pseudo" minlength="2" maxlength="255" value="<?php echo $args["valeurNetoyee"]["Pseudo"] ?? '' ?>">
+        <input type="text" name="Pseudo" id="pseudo" placeholder="Votre Pseudo" minlength="2" maxlength="255" value="Duduch">
         <p class="erreur"><?php echo $args["erreurs"]["Pseudo"] ?? '' ?></p>
 
 
         <label for="temail">Adresse émail :</label>
-        <input type="email" name="Email" id="temail" placeholder="Adresse @ " value="<?php echo $args["valeurNetoyee"]["Email"] ?? '' ?>">
+        <input type="email" name="Email" id="temail" placeholder="Adresse @ " value="dingomax3@hotmail.com">
+
         <p class="erreur"><?php echo $args["erreurs"]["Email"] ?? '' ?></p>
 
 
@@ -56,3 +54,5 @@ require_once $chemin_sous_function . "functionsInscriptions.php";
 </body>
 
 </html>
+value="<?php echo $args["valeurNetoyee"]["Pseudo"] ?? '' ?>"
+value="<?php echo $args["valeurNetoyee"]["Email"] ?? '' ?>"

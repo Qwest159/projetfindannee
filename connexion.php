@@ -5,8 +5,12 @@ $pageTitre = "Connexion base de données";
 $metaDescription = "...";
 require_once $chemin_sous_dossier . "header.php";
 require_once $chemin_sous_function . "DB_connexion.php";
-// echo inscritpions();
+
 echo donnée_du_serveur();
+echo "<h1>Function connexion</h1>";
+require_once $chemin_sous_function . "functions_connexion.php";
+
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -19,19 +23,25 @@ echo donnée_du_serveur();
 
 <body>
 
-    <H1>Connexion</H1>
+    <form action="" method="POST">
+        <H1>Connexion</H1>
 
-    <label for="pseudo"> Votre Pseudo :</label>
-    <input type="text" name="pseudo" id="pseudo" placeholder="Votre Prénom" minlength="2" maxlength="255"> <br>
+        <label for="identifiant"> Votre Pseudo ou email:</label>
+        <input type="text" name="identifiant" id="identifiant" placeholder="Votre Prénom" value="Duduch">
+        <p class="erreur"><?php echo $args["erreurs"]["identifiant"] ?? '' ?></p>
 
-    <label for="mdp">Votre mdp :</label>
-    <input type="password" name="mdp" id="mdp" minlength="2" maxlength="72">
-    <br>
+        <label for="mdp">Votre mdp :</label>
+        <input type="password" name="code" id="code" placeholder="Votre mot de passe">
+        <p class="erreur"><?php echo $args["erreurs"]["code"] ?? '' ?></p>
 
-    <input type="submit" value="Envoier">
-    <br>
+        <input type="submit" value="Envoier">
+
+
     </form>
-
+    <p>Pas encore <a href="/inscriptions.php">inscrit?</a></p>
 </body>
+<!-- < POINTINTERROGATION php echo $args["valeurNetoyee"]["pseudo"] ?? "" ?> -->
 
 </html>
+<!-- minlength="2" maxlength="72" -->
+<!-- minlength="2" maxlength="255" -->

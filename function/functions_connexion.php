@@ -1,34 +1,32 @@
 <?php
 // echo '<pre>' . print_r($args, true) . '</pre>';
 
-// LANCER UNE ALERTE POUR VALIDER L'INSCRIPTION
+// echo '<pre>' . print_r($args, true) . '</pre>';
 
-//
+
+// FUNCTION VERIFIER MDP POUR DECRYPTER LE MDP
+//https://www.php.net/manual/fr/function.password-hash.php
+//https://www.php.net/manual/fr/function.password-verify.php
+//car rechercher dans la base de donnée ne fonctionne pas en decryptant ligne:
 
 $TableauxRegles = [
-    "Pseudo" => [
+    "identifiant" => [
         "min" => 2,
         "max" => 255,
         "requis" => "",
-        "nomDB" => "uti_pseudo",
     ],
-    "Email" => [
-        "min" => 2,
-        "max" => 255,
-        "requis" => "",
-        "nomDB" => "uti_email",
-    ],
-    "Code" => [
+
+    "code" => [
         "min" => 8,
         "max" => 72,
         "requis" => "",
-    ],
-    "Confirmations" => [
-        "min" => 8,
-        "max" => 72,
-        "requis" => "",
-        "confirmations" => "mdpconfirmations"
-    ],
+    ]
+];
+$TableauxDB = [
+    "utilisateur" => [
+        "uti_pseudo" => "table concernant les noms utilisateurs",
+        "uti_motdepasse" => "table pour mdp"
+    ]
 ];
 
 
@@ -42,17 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $postChamp = $_POST[$nomChamp];
             $champNettoyer = netoyageCharactere($postChamp);
             $args["valeurNetoyee"][$nomChamp] = $champNettoyer;
-
-            // echo '<pre>' . print_r($args["valeurNetoyee"], true) . '</pre>';
-
             $erreur = envoie_erreur($champNettoyer, $nomChamp, $TableauxRegles, $args);
-
-            if ($nomChamp === "Confirmations") {
-                $args["valeurNetoyee"][$nomChamp] = mdphackage($champNettoyer);
-            };
-
-            // echo '<pre>' . print_r($args, true) . '</pre>';
-
             // si la function renvoie quelque chose, alors mets le dans le tableau qui correspond au nom du champs
             if (isset($erreur)) {
                 $args["erreurs"][$nomChamp] = $erreur;
@@ -63,14 +51,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
     if (!isset($args["erreurs"])) { // si tableau erreur ne contient rien, alors envoie email
-        inscriptions($args);
+        // connexionpage($args["valeurNetoyee"], $TableauxRegles, $TableauxDB);
+        donnée_verif_connexion($args["valeurNetoyee"]);
         $args = [];
     }
 }
 
 
 // -------------LES REGLES POUR LES ERREURS----------
-
 function maximum($donnée, $maximum)
 {
     $longueur_mot_max = mb_strlen($donnée, 'UTF-8');
@@ -89,13 +77,7 @@ function ConfirmationMdp($mdp, $mdpconfirmation)
     return ($mdp === $mdpconfirmation) ? false : true;
 }
 
-
 //-------------REGLE POUR NETTOYAGE-----------
-
-function mdphackage($champNettoyer)
-{
-    return password_hash($champNettoyer, PASSWORD_DEFAULT);
-}
 
 function netoyageCharactere($donnee)
 {
@@ -126,44 +108,11 @@ function envoie_erreur($champNettoyer, $key, $TableauxRegles, $args)
                     return "Votre $key n'est pas valide";
                 }
             }
-            if ($regle == "confirmations" && $valeur == "mdpconfirmations") {
+            if ($regle == "type" && $valeur == "mdpconfirmations") {
                 if (ConfirmationMdp($args["valeurNetoyee"]["Code"] ?? '', $champNettoyer)) {
                     return "Votre code de $key ne correspond pas";
-                }
-            }
-            if ($regle == "nomDB" && ($valeur == "uti_pseudo" or $valeur == "uti_email")) {
-                if (donnee_identique($champNettoyer, $valeur)) {
-                    return "Votre $key existe déja";
                 }
             }
         }
     }
 }
-
-
-//------------------EMAIL-------------
-// function email($args)
-// {
-//     $destinataire = "Claudy Focan <claudy.focan@dikkenek.be>";
-//     // Destinataire de l'email.
-//     $expediteur = $args["Nom"];
-//     $expediteur .= " " . $args["Prénom"];
-//     $expediteur .= " <" . $args["Email"] . ">";
-//     // Sujet de l'email.
-//     $sujet = "Le formulaire";
-//     $message_client = $args["Message"];
-
-//     $entete = [
-//         "From" => $expediteur,
-//         "MIME-Version" => "1.0",
-//         "Content-Type" => "text/html; charset=\"UTF-8\"",
-//         "Content-Transfer-Encoding" => "quoted-printable"
-//     ];
-
-//     try {
-//         mail($destinataire, $sujet, $message_client, $entete);
-//         echo "Le courriel a été envoyé avec succès.";
-//     } catch (Exception $e) {
-//         echo "L'envoi du courriel a échoué.";
-//     };
-// }
