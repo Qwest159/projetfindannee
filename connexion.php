@@ -22,7 +22,7 @@ require_once $chemin_sous_function . "functions_connexion.php";
 </head>
 
 <body>
-
+    <main id="formconnexion"></main>
     <form action="" method="POST">
         <H1>Connexion</H1>
 

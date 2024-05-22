@@ -69,7 +69,7 @@ function donnée_du_serveur()
             <?php
             foreach ($utilisateurs as $utilisateur) {
             ?>
-                <li>Pseudo : <?= $utilisateur['uti_pseudo'] ?>, E-mail : <?= $utilisateur['uti_email'] ?>, Mot de passe : <?= $utilisateur['uti_motdepasse'] ?> </li>
+                <li>Pseudo : <?= $utilisateur['uti_pseudo'] ?>, E-mail : <?= $utilisateur['uti_email'] ?>, Mot de passe : <?= $utilisateur['uti_motdepasse'] ?>, activation : <?= $utilisateur['uti_code_activation'] ?> </li>
 
             <?php
             }
@@ -87,7 +87,7 @@ function inscriptions($args)
         try {
             // Instancier la connexion à la base de données.
             $pdo = connexion();
-            $requete = "INSERT INTO utilisateur(uti_pseudo, uti_email,uti_motdepasse) VALUES (:pseudo, :email,:mdp)";
+            $requete = "INSERT INTO utilisateur(uti_pseudo, uti_email,uti_motdepasse,uti_code_activation) VALUES (:pseudo, :email,:mdp,:codeactivation)";
 
             // Préparer la requête SQL.
             $stmt = $pdo->prepare($requete);
@@ -97,6 +97,13 @@ function inscriptions($args)
             $stmt->bindValue(':pseudo', $args["valeurNetoyee"]["Pseudo"], PDO::PARAM_STR);
             $stmt->bindValue(':email', $args["valeurNetoyee"]["Email"], PDO::PARAM_STR);
             $stmt->bindValue(':mdp', $args["valeurNetoyee"]["Confirmations"], PDO::PARAM_STR);
+            $stmt->bindValue(':codeactivation', $args["valeurNetoyee"]["activation"], PDO::PARAM_STR);
+
+
+
+
+
+
 
             // Exécuter la requête.
             $stmt->execute();
@@ -130,72 +137,15 @@ function donnee_identique($donnee, $table)
         $utilisateur = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (isset($utilisateur) && !empty($utilisateur)) {
+            // retourne true si il y a des données
             return true;
         } else {
+            // retourne false si il n'y a pas de données
             return false;
         }
     }
 }
 
-
-function connexionpage($args, $TableauxRegles, $tableaudb)
-{
-    $nom = "";
-
-
-    // echo '<pre>' . print_r($args, true) . '</pre>';
-
-}
-
-// function requetesql($TableauxDB)
-// {
-//     foreach ($TableauxDB as $nomdeTable => $value) {
-//         foreach ($TableauxDB[$nomdeTable] as $fichierTable => $value) {
-
-//             return  "SELECT $fichierTable FROM $nomdeTable";
-//         }
-//         // echo '<pre>' . print_r($args, true) . '</pre>';
-//     }
-// }
-
-
-
-// function donnée_verif_connexion($args)
-// {
-//     try {
-//         // Instancier la connexion à la base de données.
-//         $pdo = connexion();
-
-//         // Cette requête interroge la table "t_utilisateur_uti" afin de retourner tous les utilisateurs.
-//         $requete = "SELECT * FROM utilisateur";
-
-
-
-//         // La méthode "query()" est utilisée pour exécuter une requête SQL qui retourne un jeu de résultats, ce qui est le cas des requêtes "SELECT".
-//         // La méthode retourne "false" si la requête n'a rien trouvé.
-
-//         $stmt = $pdo->query($requete);
-
-//         // La méthode "fetchAll()" permet de récupérer tous les éléments issues de la requête sous forme de tableau.
-//         // Le paramètre "PDO::FETCH_ASSOC" permet de préciser que l'on désire obtenir des tableaux associatifs (nomColonne => valeur) plutôt que des objets.
-//         // La méthode retourne un tableau vide si la requête n'a rien trouvé.
-//         // Dans ce contexte, la requête retournera un tableau dans lequel chaque élément correspond à un utilisateur
-//         // et où chaque utilisateur sera représenté par un tableau associatif comprenant toutes les informations de l'utilisateur.
-
-//         $stmt->bindValue(':pseudo',  $args["valeurNetoyee"]["pseudo"], PDO::PARAM_STR);
-//         $stmt->bindValue(':mdp', $args["valeurNetoyee"]["code"], PDO::PARAM_STR);
-
-//         $estValide = $stmt->execute();
-//     } catch (PDOException $e) {
-//         gerer_exceptions($e);
-//     }
-
-//     if (isset($estValide) && $estValide !== false) {
-//         // Récupérer l'utilisateur issu de la requête.
-
-//         $utilisateur = $stmt->fetch(PDO::FETCH_ASSOC);
-//         ob_start();
-//     
 function verifdecrypt($donneeclient, $donneehash)
 {
     return password_verify($donneeclient, $donneehash);
@@ -240,11 +190,13 @@ function donnée_verif_connexion($args)
                 ob_start();
         ?>
                 <p>Pseudo : <?= $utilisateur['uti_pseudo'] ?> mdp : <?= $utilisateur['uti_motdepasse'] ?></p>
-<?php
+            <?php
                 echo ob_get_clean();
             } else {
-                false;
-                echo "vous n'étes pas inscrit";
+            ?>
+                <p>Vous n'avez pas l'air d'être inscrit.</p>
+                <p>Si vous le voullez, c'est par ici => <a href="/inscriptions.php">Inscriptions</a></p>
+<?php
             }
         }
     }

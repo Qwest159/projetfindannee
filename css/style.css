@@ -23,3 +23,9 @@ input {
     color: rgb(60, 255, 0);
 }
  */
+main#formconnexion {
+  margin: auto;
+}
+main#formconnexion p {
+  text-align: center;
+}

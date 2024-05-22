@@ -9,6 +9,8 @@
 //https://www.php.net/manual/fr/function.password-verify.php
 //car rechercher dans la base de donnée ne fonctionne pas en decryptant ligne:
 
+// Mettez le gestionnaire de formulaire à jour (mdp oublié)
+
 $TableauxRegles = [
     "identifiant" => [
         "min" => 2,

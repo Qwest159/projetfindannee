@@ -3,7 +3,14 @@
 
 // LANCER UNE ALERTE POUR VALIDER L'INSCRIPTION
 
-//
+
+// CE QUI RESTE A FAIRE
+
+//uti_compte_active: Valeur booléenne par defaut à 1 (pour le moment on active le compte dès sa création).
+
+// uti_code_activation: Une valeur fixe de 5 caractères facultative.
+
+// modifier le mdp si l'utilisateur souhaite changer son mdp
 
 $TableauxRegles = [
     "Pseudo" => [
@@ -30,6 +37,37 @@ $TableauxRegles = [
         "confirmations" => "mdpconfirmations"
     ],
 ];
+
+function generercode()
+{
+    $nombres = rand(0, 9);
+    for ($i = 1; $i <= 4; $i++) {
+        $nombres .= rand(0, 9);
+    }
+    return $nombres;
+}
+
+
+// while (donnee_identiquecode(55450, "uti_code_activation")) {
+// }
+// echo generercode();
+
+function coderepeat()
+{
+    $codeactivation = generercode();
+    while (donnee_identique($codeactivation, "uti_code_activation")) {
+        $codeactivation =  generercode();
+    }
+    return $codeactivation;
+};
+
+
+
+
+
+
+
+
 
 
 // CONDITIONS finale pour envoier l'email ou la requete
@@ -63,7 +101,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
     if (!isset($args["erreurs"])) { // si tableau erreur ne contient rien, alors envoie email
+        $args["valeurNetoyee"]["activation"] = coderepeat();
         inscriptions($args);
+        echo '<pre>' . print_r($args, true) . '</pre>';
         $args = [];
     }
 }
