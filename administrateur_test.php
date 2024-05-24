@@ -5,12 +5,19 @@ require_once $chemin_sous_dossier . "nav.php";
 $pageTitre = "Inscriptions";
 $metaDescription = " ....";
 require_once $chemin_sous_dossier . "header.php";
+require_once $chemin_sous_function . "gestionnaire_authentification.php";
+
 require_once $chemin_sous_function . "DB_connexion.php";
 
 echo donnée_du_serveur();
 echo "<h1>Function connexion</h1>";
 require_once $chemin_sous_function . "functions_connexion.php";
 
+
+if (($_SESSION['donnee']["uti_role"]) !== "Administrateur") {
+    header("Location: Profil.php");
+    exit();
+}
 
 
 function generercode()

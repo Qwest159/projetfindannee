@@ -54,8 +54,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
     if (!isset($args["erreurs"])) { // si tableau erreur ne contient rien, alors envoie email
         // connexionpage($args["valeurNetoyee"], $TableauxRegles, $TableauxDB);
-        donnée_verif_connexion($args["valeurNetoyee"]);
-        $args = [];
+        if (connexionDB($args["valeurNetoyee"])) {
+            $result = connexionDB($args["valeurNetoyee"]);
+            connecter_uti("donnee", $result);
+            $args = [];
+            header("Location: Profil.php");
+            exit();
+        } else {
+?>
+            <p>Vous n'avez pas l'air d'être inscrit.</p>
+            <p>Si vous le voullez, c'est par ici => <a href="/inscriptions.php">Inscriptions</a></p>
+<?php
+        }
     }
 }
 

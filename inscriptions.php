@@ -4,12 +4,17 @@ require_once $chemin_sous_dossier . "nav.php";
 $pageTitre = "Inscriptions";
 $metaDescription = " ....";
 require_once $chemin_sous_dossier . "header.php";
+require_once $chemin_sous_function . "gestionnaire_authentification.php";
 echo
 "<h1>Données du serveur</h1>";
 require_once $chemin_sous_function . "DB_connexion.php";
 echo donnée_du_serveur();
 echo "<h1>Function Inscriptions</h1>";
 require_once $chemin_sous_function . "functionsInscriptions.php";
+if (isset(($_SESSION['donnee']))) {
+    header("Location: Profil.php");
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">

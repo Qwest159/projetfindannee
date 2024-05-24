@@ -1,12 +1,13 @@
 <?php
 
-// MDP HACHER DOIT ETRE OUVERT POUR TRAVAILLER AVEC (retirer le fait de hacher puis le remettre pour la connexion)
-
-
-//WARNIN : LOOK SECURITY DATABASE
+// la base de donne enregistre avec majuscule et minuscule?
 
 
 
+function verifdecrypt($donneeclient, $donneehash)
+{
+    return password_verify($donneeclient, $donneehash);
+}
 
 // Tenter d'établir une connexion à la base de données :
 function gerer_exceptions(PDOException $e): void
@@ -75,7 +76,7 @@ function donnée_du_serveur()
             }
             ?>
         </ul>
-        <?php
+<?php
         echo ob_get_clean();
     }
 }
@@ -98,12 +99,6 @@ function inscriptions($args)
             $stmt->bindValue(':email', $args["valeurNetoyee"]["Email"], PDO::PARAM_STR);
             $stmt->bindValue(':mdp', $args["valeurNetoyee"]["Confirmations"], PDO::PARAM_STR);
             $stmt->bindValue(':codeactivation', $args["valeurNetoyee"]["activation"], PDO::PARAM_STR);
-
-
-
-
-
-
 
             // Exécuter la requête.
             $stmt->execute();
@@ -146,12 +141,11 @@ function donnee_identique($donnee, $table)
     }
 }
 
-function verifdecrypt($donneeclient, $donneehash)
-{
-    return password_verify($donneeclient, $donneehash);
-}
 
-function donnée_verif_connexion($args)
+
+
+
+function connexionDB($args)
 {
     if ($_SERVER["REQUEST_METHOD"] === "POST") {
         try {
@@ -159,9 +153,6 @@ function donnée_verif_connexion($args)
             $pdo = connexion();
             $requete = "SELECT * FROM utilisateur WHERE (uti_pseudo = :pseudo OR 
             uti_email = :pseudo)";
-
-            // $utilisateur['uti_motdepasse'] FONCTION POUR RETIRER ME HACHEMENT ICI 
-
 
             // Préparer la requête SQL.
             $stmt = $pdo->prepare($requete);
@@ -186,17 +177,9 @@ function donnée_verif_connexion($args)
 
             //Permet de verifier si: utilisateur a une donnée et qu'elle correspond au mdp haché fourni
             if (isset($utilisateur) && !empty($utilisateur) && password_verify($args["code"], $utilisateur['uti_motdepasse'])) {
-
-                ob_start();
-        ?>
-                <p>Pseudo : <?= $utilisateur['uti_pseudo'] ?> mdp : <?= $utilisateur['uti_motdepasse'] ?></p>
-            <?php
-                echo ob_get_clean();
+                return $utilisateur;
             } else {
-            ?>
-                <p>Vous n'avez pas l'air d'être inscrit.</p>
-                <p>Si vous le voullez, c'est par ici => <a href="/inscriptions.php">Inscriptions</a></p>
-<?php
+                false;
             }
         }
     }

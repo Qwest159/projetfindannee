@@ -9,7 +9,7 @@ echo "<h1> TEST function </h1>";
 require_once $chemin_sous_function . "functions_formulaire.php";
 
 
-// envoie_formulaire($name_ok,$prenom_ok,$email_ok,$message_ok,$minimum,$maximum) ;
+
 ?>
 
 <h1>Contact</h1>

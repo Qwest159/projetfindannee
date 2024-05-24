@@ -21,8 +21,6 @@ function nav(string $chemin, string $nom_lien): string
 }
 $nav =  nav("/accueil.php", "Accueil") .
     nav("/contact.php", "Contact") .
-    nav("/inscriptions.php", "Inscriptions") .
     nav("/connexion.php", "Connexion") .
-    nav("/administrateur_test.php", "Administrateur_test") .
     nav("/Profil.php", "Profil");
 ?>
