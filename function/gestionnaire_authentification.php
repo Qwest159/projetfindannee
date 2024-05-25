@@ -36,11 +36,34 @@ function uti_enligne($nom)
     return  $_SESSION[$nom];
 }
 
-
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    if (isset($_POST["deco"])) {
-        unset($_SESSION['donnee']);
-        header("Location: accueil.php");
-        exit();
+function deconnection($nom)
+{
+    if ($_SERVER["REQUEST_METHOD"] === "POST") {
+        if (isset($_POST["deco"])) {
+            unset($_SESSION[$nom]);
+            header("Location: accueil.php");
+            exit();
+        }
     }
 }
+
+
+
+
+// function direction()
+// {
+//     $direction = [
+//         "/connexion.php" => "Profil.php",
+//         "/inscriptions.php" => "Profil.php",
+//         "/Profil.php" => "connexion.php"
+
+//     ];
+//     $cheminactuelle = $_SERVER['REQUEST_URI'];
+
+//     foreach ($direction as $chemin => $value) {
+//         if (isset($_SESSION['donnee']) && $cheminactuelle === $chemin) {
+//             header("Location: $value");
+//             exit();
+//         }
+//     }
+// }

@@ -55,11 +55,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (!isset($args["erreurs"])) { // si tableau erreur ne contient rien, alors envoie email
         // connexionpage($args["valeurNetoyee"], $TableauxRegles, $TableauxDB);
         if (connexionDB($args["valeurNetoyee"])) {
-            $result = connexionDB($args["valeurNetoyee"]);
-            connecter_uti("donnee", $result);
+            $resultat = connexionDB($args["valeurNetoyee"]);
+
             $args = [];
-            header("Location: Profil.php");
-            exit();
+            if ($resultat['uti_compte_active'] === 0) {
+                connecter_uti("verif_connexion", $resultat);
+                header("Location: PremiereInscrit.php");
+            } else {
+                connecter_uti("donnee", $resultat);
+                header("Location: Profil.php");
+                exit();
+            }
         } else {
 ?>
             <p>Vous n'avez pas l'air d'être inscrit.</p>

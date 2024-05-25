@@ -8,7 +8,7 @@ require_once $chemin_sous_function . "DB_connexion.php";
 require_once $chemin_sous_function . "gestionnaire_authentification.php";
 
 
-if (!isset(($_SESSION['donnee']))) {
+if (!isset($_SESSION['donnee'])) {
     header("Location: connexion.php");
     exit();
 }
@@ -30,5 +30,5 @@ echo "<h1>Function authentification</h1>";
 
 </form>
 <?php
-// phpinfo();
+deconnection("donnee")
 ?>

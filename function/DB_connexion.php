@@ -107,7 +107,33 @@ function inscriptions($args)
         }
     }
 }
+function mise_a_jour($table, $nom)
+{
 
+    // Les données provenant d'un formulaire permettant de modifier son pseudo.
+    print_r($_POST);
+    /*
+    Affiche :
+        Array
+        (
+            [utilisateur_id] => 2
+            [utilisateur_nouveau_pseudo] => JC
+        )
+*/
+
+    try {
+        $pdo = connexion();
+
+        $requete = "UPDATE t_utilisateur_uti SET uti_pseudo = :nouveauPseudo WHERE uti_id = :idUtilisateur";
+        $stmt = $pdo->prepare($requete);
+        $stmt->bindValue(':nouveauPseudo', $_POST['utilisateur_nouveau_pseudo'], PDO::PARAM_STR);
+        $stmt->bindValue(':idUtilisateur', $_POST['utilisateur_id'], PDO::PARAM_INT);
+
+        $stmt->execute();
+    } catch (\PDOException $e) {
+        gerer_exceptions($e);
+    }
+}
 function donnee_identique($donnee, $table)
 {
     try {

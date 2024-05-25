@@ -11,7 +11,7 @@ require_once $chemin_sous_function . "DB_connexion.php";
 echo donnée_du_serveur();
 echo "<h1>Function Inscriptions</h1>";
 require_once $chemin_sous_function . "functionsInscriptions.php";
-if (isset(($_SESSION['donnee']))) {
+if (isset($_SESSION['donnee'])) {
     header("Location: Profil.php");
     exit();
 }

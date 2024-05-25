@@ -11,7 +11,7 @@ echo donnée_du_serveur();
 echo "<h1>Function connexion</h1>";
 require_once $chemin_sous_function . "functions_connexion.php";
 
-if (isset(($_SESSION['donnee']))) {
+if (isset($_SESSION['donnee'])) {
     header("Location: Profil.php");
     exit();
 }
