@@ -33,5 +33,7 @@ while (donnee_identique($codeactivation2, "uti_code_activation")) {
     generercode();
 }
 
-
-echo $codeactivation2;
+?>
+<main>
+    <?= $codeactivation2; ?>
+</main>

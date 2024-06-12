@@ -36,12 +36,12 @@ function uti_enligne($nom)
     return  $_SESSION[$nom];
 }
 
-function deconnection($nom)
+function deconnection()
 {
     if ($_SERVER["REQUEST_METHOD"] === "POST") {
         if (isset($_POST["deco"])) {
-            unset($_SESSION[$nom]);
-            header("Location: accueil.php");
+            session_destroy();
+            header("Location: index.php");
             exit();
         }
     }

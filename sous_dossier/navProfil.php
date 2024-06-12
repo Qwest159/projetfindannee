@@ -19,8 +19,7 @@ function nav(string $chemin, string $nom_lien): string
 <?php
     return ob_get_clean();
 }
-$nav =  nav("/accueil.php", "Accueil") .
+$nav =  nav("/", "Accueil") .
     nav("/contact.php", "Contact") .
-    nav("/connexion.php", "Connexion") .
     nav("/Profil.php", "Profil");
 ?>

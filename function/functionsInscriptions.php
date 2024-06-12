@@ -101,7 +101,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
     if (!isset($args["erreurs"])) { // si tableau erreur ne contient rien, alors envoie email
-        echo "Félicitation, vous etes inscrit";
+        echo "Félicitation, vous êtes inscrit";
         $args["valeurNetoyee"]["activation"] = coderepeat();
         inscriptions($args);
         // echo '<pre>' . print_r($args, true) . '</pre>';

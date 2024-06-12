@@ -1,3 +1,5 @@
 <footer>
-    <span>C'est Mon Footer ICI</span>
+    <p><a href="../sous_dossier/mentions.php">Mentions légales</a> 2024
+    </p>
+    <p>© Duchesne Raphaël</p>
 </footer>

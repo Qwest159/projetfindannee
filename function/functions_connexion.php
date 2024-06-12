@@ -58,18 +58,23 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $resultat = connexionDB($args["valeurNetoyee"]);
 
             $args = [];
-            if ($resultat['uti_compte_active'] === 0) {
+            if ($resultat['uti_compte_active'] == 0) {
                 connecter_uti("verif_connexion", $resultat);
+                emailcode($resultat);
                 header("Location: PremiereInscrit.php");
+                exit();
             } else {
                 connecter_uti("donnee", $resultat);
                 header("Location: Profil.php");
+                // header("Location: . BASE_URL Profil.php");
                 exit();
             }
         } else {
 ?>
-            <p>Vous n'avez pas l'air d'être inscrit.</p>
-            <p>Si vous le voullez, c'est par ici => <a href="/inscriptions.php">Inscriptions</a></p>
+            <div id="pasinscrit">
+                <p>Vous n'avez pas l'air d'être inscrit.</p>
+                <p>Si vous le voullez, c'est par ici => <a href="/inscriptions.php">Inscriptions</a></p>
+            </div>
 <?php
         }
     }

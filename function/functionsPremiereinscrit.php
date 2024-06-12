@@ -12,10 +12,13 @@
 
 // modifier le mdp si l'utilisateur souhaite changer son mdp
 
+// Supprimer un élément d'une table CODE DE VERIF SI ADRESSE EMAIL OK
+
+
 $TableauxRegles = [
     "validation" => [
         "min" => 5,
-        "max" => 6,
+        "max" => 5,
         "requis" => "",
         "nomDB" => "uti_code_activation",
     ]
@@ -55,49 +58,47 @@ function coderepeat()
 
 // CONDITIONS finale pour envoier l'email ou la requete
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    if (isset($_POST["verificationCode"])) {
-        $args = [];
-        foreach ($TableauxRegles as $nomChamp => $champ) {
 
-            if (isset($_POST[$nomChamp])) // Si il y a une donnée qui correspond a la valeur du tableau(Nom,Prenom,Email....) alors rentre ici
-            {
-                $postChamp = $_POST[$nomChamp];
-                $champNettoyer = netoyageCharactere($postChamp);
-                $args["valeurNetoyee"][$nomChamp] = $champNettoyer;
+    $args = [];
+    foreach ($TableauxRegles as $nomChamp => $champ) {
 
-                // echo '<pre>' . print_r($args["valeurNetoyee"], true) . '</pre>';
+        if (isset($_POST[$nomChamp])) // Si il y a une donnée qui correspond a la valeur du tableau(Nom,Prenom,Email....) alors rentre ici
+        {
+            $postChamp = $_POST[$nomChamp];
+            $champNettoyer = netoyageCharactere($postChamp);
+            $args["valeurNetoyee"][$nomChamp] = $champNettoyer;
 
-                $erreur = envoie_erreur($champNettoyer, $nomChamp, $TableauxRegles, $args);
+            // echo '<pre>' . print_r($args["valeurNetoyee"], true) . '</pre>';
 
-                // echo '<pre>' . print_r($args, true) . '</pre>';
+            $erreur = envoie_erreur($champNettoyer, $nomChamp, $TableauxRegles, $args);
 
-                // si la function renvoie quelque chose, alors mets le dans le tableau qui correspond au nom du champs
-                if (isset($erreur)) {
-                    $args["erreurs"][$nomChamp] = $erreur;
-                }
-            } else {
-                //SI le nom de l'input n'est pas le meme  => erreur autre contient"champs inconnu"
-                $args["erreurs"]["autre"] = "champs inconnu";
-            }
-        }
-        if (!isset($args["erreurs"])) { // si tableau erreur ne contient rien, 
-
-            echo "REUSSI";
-            $donnee = uti_enligne("verif_connexion");
-            unset($_SESSION["verif_connexion"]);
-
-            // MISE A JOUR DB POUR METTRE COMPTE ACTIVE A 1 
-            // LUI ADRESSER LA BONNE SESSION DONNEE
-
-            $resultat['uti_compte_active'] === 0;
-            connecter_uti("donnee", $donnee);
-            header("Location: Profil.php");
-            // $args["valeurNetoyee"]["activation"] = coderepeat();
             // echo '<pre>' . print_r($args, true) . '</pre>';
-            $args = [];
+
+            // si la function renvoie quelque chose, alors mets le dans le tableau qui correspond au nom du champs
+            if (isset($erreur)) {
+                $args["erreurs"][$nomChamp] = $erreur;
+            }
+        } else {
+            //SI le nom de l'input n'est pas le meme  => erreur autre contient"champs inconnu"
+            $args["erreurs"]["autre"] = "champs inconnu";
         }
     }
+    if (!isset($args["erreurs"]) && isset($_POST["verificationCode"])) { // si tableau erreur ne contient rien, 
+        $donnee = uti_enligne("verif_connexion");
+        mise_a_jour($donnee["uti_id"]);
+
+        $args = [];
+        connecter_uti("donnee", $donnee);
+        // LUI ADRESSER LA BONNE SESSION DONNEE
+        header("Location: Profil.php");
+        // echo '<pre>' . print_r($args, true) . '</pre>';
+    }
+    if (isset($_POST["codeperdu"])) {
+        emailcode(uti_enligne("verif_connexion"));
+    }
 }
+
+
 
 
 // -------------LES REGLES POUR LES ERREURS----------
@@ -150,7 +151,7 @@ function envoie_erreur($champNettoyer, $key, $TableauxRegles, $args)
         } else {
             //SI il y a une regle et que le paramettre en second est true 
             if ($regle == "min" && minimum($champNettoyer, $valeur)) {
-                return "Votre $key doit etre de minimum $valeur caractere";
+                return "Votre $key doit etre $valeur caractere";
             }
             if ($regle == "max" && maximum($champNettoyer, $valeur)) {
                 return "Votre $key doit etre de maximum $valeur caractere";
@@ -165,6 +166,37 @@ function envoie_erreur($champNettoyer, $key, $TableauxRegles, $args)
     }
 }
 
+
+
+// Les données provenant d'un formulaire permettant de modifier son pseudo.
+// print_r($_POST);
+/*
+    Affiche :
+        Array
+        (
+            [utilisateur_id] => 2
+            [utilisateur_nouveau_pseudo] => JC
+        )
+*/
+function mise_a_jourDB($args)
+{
+    try {
+        $pdo = connexion();
+
+        $requete = "UPDATE t_utilisateur_uti SET (uti_pseudo = :nouveauPseudo OR uti_email = :nouveauPseudo ) WHERE uti_id = :idUtilisateur";
+        $stmt = $pdo->prepare($requete);
+        $stmt->bindValue(':nouveauPseudo', $_POST['utilisateur_nouveau_pseudo'], PDO::PARAM_STR);
+        $stmt->bindValue(':idUtilisateur', $_POST['utilisateur_id'], PDO::PARAM_INT);
+
+        $stmt->bindValue(':nouveauPseudo', $args["valeurNetoyee"]["Pseudo"], PDO::PARAM_STR);
+        $stmt->bindValue(':idUtilisateur', $_POST['utilisateur_id'], PDO::PARAM_INT);
+
+
+        $stmt->execute();
+    } catch (\PDOException $e) {
+        gerer_exceptions($e);
+    }
+}
 
 //------------------EMAIL-------------
 // function email($args)
