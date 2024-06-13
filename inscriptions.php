@@ -2,12 +2,12 @@
 require_once  __DIR__ . DIRECTORY_SEPARATOR . "config.php";
 require_once $chemin_sous_dossier . "nav.php";
 $pageTitre = "Inscriptions";
-$metaDescription = " ....";
+$metaDescription = "Page inscirptions du site";
 require_once $chemin_sous_dossier . "header.php";
 require_once $chemin_sous_function . "gestionnaire_authentification.php";
 
 require_once $chemin_sous_function . "DB_connexion.php";
-
+require_once $chemin_sous_function . "functionsInscriptions.php";
 
 if (isset($_SESSION['donnee'])) {
     header("Location: Profil.php");
@@ -27,7 +27,11 @@ if (isset($_SESSION['donnee'])) {
     <body>
 
         <H1>Inscriptions</H1>
-        <p class="confirmations_envoie"><?php require_once $chemin_sous_function . "functionsInscriptions.php"; ?></p>
+
+        <p class="confirmations_envoie"><?=
+                                        ($message["inscriptions"]) ?? "";
+                                        ?></p>
+
         <form id="formulaire" method="POST">
             <label for="Pseudo"> Votre Pseudo :</label>
             <input type="text" name="Pseudo" id="pseudo" placeholder="Votre Pseudo" minlength="2" maxlength="255" value="<?php echo $args["valeurNetoyee"]["Pseudo"] ?? '' ?>">

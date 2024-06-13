@@ -70,12 +70,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 exit();
             }
         } else {
+            ob_start();
 ?>
-            <div id="pasinscrit">
-                <p>Vous n'avez pas l'air d'être inscrit.</p>
-                <p>Si vous le voullez, c'est par ici => <a href="/inscriptions.php">Inscriptions</a></p>
-            </div>
+
+            <p>Vous n'avez pas l'air d'être inscrit.</p>
+            <p>Si vous le voulez, c'est par ici => <a href="/inscriptions.php">Inscriptions</a></p>
+
 <?php
+            // Récupérer le contenu mis en mémoire tampon et le stocker dans une variable
+            $message["connexion"] = ob_get_clean();
         }
     }
 }

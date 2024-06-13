@@ -2,13 +2,12 @@
 require_once  __DIR__ .  DIRECTORY_SEPARATOR . "config.php";
 require_once  $chemin_sous_dossier . "nav.php";
 $pageTitre = "Connexion Client";
-$metaDescription = "...";
+$metaDescription = "Page connexion du site";
 require_once $chemin_sous_dossier . "header.php";
 require_once $chemin_sous_function . "gestionnaire_authentification.php";
 require_once $chemin_sous_function . "DB_connexion.php";
+require_once $chemin_sous_function . "functions_connexion.php";
 
-// echo donnée_du_serveur();
-// echo "<h1>Function connexion</h1>";
 
 
 if (isset($_SESSION['donnee'])) {
@@ -19,12 +18,16 @@ if (isset($_SESSION['donnee'])) {
 ?>
 <main>
     <H1>Connexion</H1>
-    <p class="confirmations_envoie"><?php require_once $chemin_sous_function . "functions_connexion.php"; ?></p>
+    <div class="lieninscrit"><?=
+                                ($message["connexion"]) ?? "";
+                                ?></div>
+
+
     <form id="formulaire" action="" method="POST">
 
 
         <label for="identifiant"> Votre Pseudo ou email:</label>
-        <input type="text" name="identifiant" id="identifiant" placeholder="Votre Prénom" value="">
+        <input type="text" name="identifiant" id="identifiant" placeholder="Votre identifiant" value="">
         <p class="erreur"><?php echo $args["erreurs"]["identifiant"] ?? '' ?></p>
 
         <label for="mdp">Votre mdp :</label>
@@ -35,7 +38,7 @@ if (isset($_SESSION['donnee'])) {
 
 
     </form>
-    <p id="nouvinscrit"> <a href="/inscriptions.php"> Pas encore inscrit?</a></p>
+    <p class="lieninscrit"><a href="/inscriptions.php"> Pas encore inscrit?</a></p>
 </main>
 <?php require_once $chemin_sous_dossier . "footer.php"   ?>
 

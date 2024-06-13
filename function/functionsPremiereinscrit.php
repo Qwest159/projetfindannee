@@ -1,18 +1,4 @@
 <?php
-// echo '<pre>' . print_r($args, true) . '</pre>';
-
-// LANCER UNE ALERTE POUR VALIDER L'INSCRIPTION
-
-
-// CE QUI RESTE A FAIRE
-
-//uti_compte_active: Valeur booléenne par defaut à 1 (pour le moment on active le compte dès sa création).
-
-// uti_code_activation: Une valeur fixe de 5 caractères facultative.
-
-// modifier le mdp si l'utilisateur souhaite changer son mdp
-
-// Supprimer un élément d'une table CODE DE VERIF SI ADRESSE EMAIL OK
 
 
 $TableauxRegles = [
@@ -21,6 +7,16 @@ $TableauxRegles = [
         "max" => 5,
         "requis" => "",
         "nomDB" => "uti_code_activation",
+    ]
+];
+
+$TableauxRegles2 = [
+    "email" => [
+        "min" => 2,
+        "max" => 250,
+        "requis" => "",
+        "nomDB" => "uti_email",
+        "type" => "email",
     ]
 ];
 
@@ -34,10 +30,6 @@ function generercode()
 }
 
 
-// while (donnee_identiquecode(55450, "uti_code_activation")) {
-// }
-// echo generercode();
-
 function coderepeat()
 {
     $codeactivation = generercode();
@@ -47,18 +39,8 @@ function coderepeat()
     return $codeactivation;
 };
 
-
-
-
-
-
-
-
-
-
 // CONDITIONS finale pour envoier l'email ou la requete
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["codebase"])) {
     $args = [];
     foreach ($TableauxRegles as $nomChamp => $champ) {
 
@@ -83,23 +65,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $args["erreurs"]["autre"] = "champs inconnu";
         }
     }
-    if (!isset($args["erreurs"]) && isset($_POST["verificationCode"])) { // si tableau erreur ne contient rien, 
+    if (!isset($args["erreurs"])) {
+        // si tableau erreur ne contient rien, 
         $donnee = uti_enligne("verif_connexion");
-        mise_a_jour($donnee["uti_id"]);
-
+        mise_a_jour($donnee["uti_id"], "uti_compte_active", 1);
         $args = [];
         connecter_uti("donnee", $donnee);
-        // LUI ADRESSER LA BONNE SESSION DONNEE
         header("Location: Profil.php");
         // echo '<pre>' . print_r($args, true) . '</pre>';
-    }
-    if (isset($_POST["codeperdu"])) {
-        emailcode(uti_enligne("verif_connexion"));
     }
 }
 
 
 
+// email pour réenvoier l'email
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["renvoihidden"])) {
+    emailcode(uti_enligne("verif_connexion"));
+    $message["codeactive"] = "Le courriel a été envoyé avec succès sur votre adresse. ";
+}
 
 // -------------LES REGLES POUR LES ERREURS----------
 
@@ -156,28 +139,23 @@ function envoie_erreur($champNettoyer, $key, $TableauxRegles, $args)
             if ($regle == "max" && maximum($champNettoyer, $valeur)) {
                 return "Votre $key doit etre de maximum $valeur caractere";
             }
+            if ($regle == "nomDB" && ($valeur == "uti_email")) {
+                if (!donnee_identique($champNettoyer, $valeur)) {
+                    return "Votre $key n'est pas la bonne";
+                }
+            }
             // if (!is_numeric($champNettoyer)) {
             //     return "Votre $key doit etre composé que de chiffre";
             // }
-            if (changement_en_chiffre($champNettoyer) !== changement_en_chiffre($_POST["codebase"])) {
-                return "Votre $key n'est pas bon";
+
+            if ($regle == "type" && $valeur == "email") {
+                if (!(filter_var($champNettoyer, FILTER_VALIDATE_EMAIL))) {
+                    return "Votre $key n'est pas valide";
+                }
             }
         }
     }
 }
-
-
-
-// Les données provenant d'un formulaire permettant de modifier son pseudo.
-// print_r($_POST);
-/*
-    Affiche :
-        Array
-        (
-            [utilisateur_id] => 2
-            [utilisateur_nouveau_pseudo] => JC
-        )
-*/
 function mise_a_jourDB($args)
 {
     try {
@@ -197,30 +175,3 @@ function mise_a_jourDB($args)
         gerer_exceptions($e);
     }
 }
-
-//------------------EMAIL-------------
-// function email($args)
-// {
-//     $destinataire = "Claudy Focan <claudy.focan@dikkenek.be>";
-//     // Destinataire de l'email.
-//     $expediteur = $args["Nom"];
-//     $expediteur .= " " . $args["Prénom"];
-//     $expediteur .= " <" . $args["Email"] . ">";
-//     // Sujet de l'email.
-//     $sujet = "Le formulaire";
-//     $message_client = $args["Message"];
-
-//     $entete = [
-//         "From" => $expediteur,
-//         "MIME-Version" => "1.0",
-//         "Content-Type" => "text/html; charset=\"UTF-8\"",
-//         "Content-Transfer-Encoding" => "quoted-printable"
-//     ];
-
-//     try {
-//         mail($destinataire, $sujet, $message_client, $entete);
-//         echo "Le courriel a été envoyé avec succès.";
-//     } catch (Exception $e) {
-//         echo "L'envoi du courriel a échoué.";
-//     };
-// }

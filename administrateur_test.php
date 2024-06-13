@@ -2,8 +2,8 @@
 
 require_once  __DIR__ . DIRECTORY_SEPARATOR . "config.php";
 require_once $chemin_sous_dossier . "nav.php";
-$pageTitre = "Inscriptions";
-$metaDescription = " ....";
+$pageTitre = "Administrateur";
+$metaDescription = "Page administrateur";
 require_once $chemin_sous_dossier . "header.php";
 require_once $chemin_sous_function . "gestionnaire_authentification.php";
 

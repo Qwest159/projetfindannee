@@ -2,7 +2,6 @@ p,
 span,
 legend,
 fieldset {
-  color: rgb(255, 255, 255);
   font-size: larger;
 }
 
@@ -37,6 +36,20 @@ header nav img {
   width: 3.5em;
 }
 /* -----------MAIN----------- */
+.mise_en_page {
+  display: flex;
+  flex-direction: column;
+}
+.mise_en_page figure {
+  margin: auto;
+}
+.mise_en_page img {
+  width: 100%;
+  height: auto;
+}
+.mise_en_page p {
+  text-align: center;
+}
 main {
   margin-top: 6em;
 }
@@ -44,7 +57,7 @@ h1 {
   text-align: center;
 }
 .confirmations_envoie {
-  color: rgb(38, 232, 24);
+  color: rgb(15, 166, 4);
   text-align: center;
   font-size: larger;
   font-weight: 900;
@@ -57,7 +70,8 @@ input {
   color: red;
   font-weight: 600;
 }
-#formulaire {
+
+form:not(form#deconnexion) {
   display: flex;
   flex-direction: column;
   width: 20em;
@@ -67,12 +81,12 @@ input {
   text-align: center;
 }
 
-#formulaire input {
+form input {
   width: 18em;
+  margin-top: 1em;
 }
-#formulaire h3 {
-  border-top: solid rgb(0, 255, 251) 6px;
-  padding-top: 1em;
+form:nth-of-type(2) {
+  margin-top: 1em;
 }
 input[type="submit"] {
   width: 10em;
@@ -80,9 +94,9 @@ input[type="submit"] {
   border-radius: 10px;
   margin-bottom: 1em;
 }
-#formulaire input,
-#formulaire label,
-#formulaire p {
+form input,
+form label,
+form p {
   margin: auto;
   margin-top: 0.5em;
   margin-bottom: 0.5em;
@@ -92,14 +106,16 @@ textarea {
   resize: none;
   margin: auto;
 }
-#nouvinscrit,
-#nouvinscrit a,
-#pasinscrit,
-#pasinscrit a {
+
+.lieninscrit,
+.lieninscrit a {
   text-align: center;
-  color: white;
+  color: rgb(0, 0, 0);
   text-decoration: none;
   font-weight: bold;
+}
+.lieninscrit a:hover {
+  color: rgb(0, 76, 255);
 }
 
 /* ---------------FOOTER--------------  */
@@ -110,7 +126,8 @@ footer {
   padding: 1.3em;
 }
 footer a,
-footer a:hover {
+footer a:hover,
+footer p {
   color: white;
   text-decoration: none;
 }

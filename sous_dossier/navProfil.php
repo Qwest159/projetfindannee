@@ -16,10 +16,23 @@ function nav(string $chemin, string $nom_lien): string
     ob_start(); // mettre en tampon(en suspend) le code html comme un copier coller
 ?>
     <li><a class="<?php echo $CSS ?>" href="<?php echo $chemin ?>"><?php echo $nom_lien ?></a></li>
+
 <?php
+
     return ob_get_clean();
 }
 $nav =  nav("/", "Accueil") .
     nav("/contact.php", "Contact") .
     nav("/Profil.php", "Profil");
+
+ob_start();
+?>
+<li>
+    <form id="deconnexion" method="post" action="">
+        <input type="hidden" name="deconnection" value="toto">
+        <input name="deco" type="submit" value="Deconnexion">
+    </form>
+</li>
+<?php
+$nav .= ob_get_clean();
 ?>

@@ -100,7 +100,7 @@ function donnée_du_serveur()
             }
             ?>
         </ul>
-    <?php
+<?php
         echo ob_get_clean();
     }
 }
@@ -132,14 +132,14 @@ function inscriptions($args)
         }
     }
 }
-function mise_a_jour($id)
+function mise_a_jour($id, $champs, $donnee)
 {
     try {
         $pdo = connexion();
         $table = "chris_php_projet";
-        $requete = "UPDATE $table SET uti_compte_active = :nouveaucompteactive WHERE uti_id = :idUtilisateur";
+        $requete = "UPDATE $table SET $champs = :nouveaucompteactive WHERE uti_id = :idUtilisateur";
         $stmt = $pdo->prepare($requete);
-        $stmt->bindValue(':nouveaucompteactive', 1, PDO::PARAM_STR);
+        $stmt->bindValue(':nouveaucompteactive', $donnee, PDO::PARAM_STR);
         $stmt->bindValue(':idUtilisateur', $id, PDO::PARAM_INT);
 
         $stmt->execute();
@@ -175,7 +175,7 @@ function donnee_identique($donnee, $champs)
             // retourne true si il y a des données
             return true;
         } else {
-            // retourne false si il n'y a pas de données
+            // retourne false s' il n'y a pas de données
             return false;
         }
     }
@@ -221,8 +221,45 @@ function connexionDB($args)
         }
     }
 }
+function recuputilisateurviaID($id)
+{
+    if ($_SERVER["REQUEST_METHOD"] === "POST") {
+        try {
+            // Instancier la connexion à la base de données.
+            $pdo = connexion();
+            $table = "chris_php_projet";
+            $requete = "SELECT * FROM $table WHERE uti_id = :iduser ";
+            // Préparer la requête SQL.
+            $stmt = $pdo->prepare($requete);
 
-// -----EMAIL-----
+            // Lier les variables aux marqueurs :
+
+            $stmt->bindValue(':iduser', $id, PDO::PARAM_STR);
+
+
+            // $stmt->bindValue(':mdp', $args["code"], PDO::PARAM_STR);
+            // Exécuter la requête.
+            $estValide = $stmt->execute();
+        } catch (PDOException $e) {
+            gerer_exceptions($e);
+        }
+        if (isset($estValide) && $estValide !== false) {
+            // $estvalide sera toujour true sauf s' il y une erreur dans le requete sql( exemple un nom de table mal ecrit)
+
+            // Récupérer l'utilisateur issu de la requête DE LA DB.
+            $utilisateur = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            //Permet de verifier si: utilisateur a une donnée et qu'elle correspond au mdp haché fourni
+            if (isset($utilisateur) && !empty($utilisateur)) {
+                return $utilisateur;
+            } else {
+                false;
+            }
+        }
+    }
+}
+
+// ---------EMAIL--------
 
 function emailcode($args)
 {
@@ -243,12 +280,10 @@ function emailcode($args)
         "Content-Transfer-Encoding" => "quoted-printable"
     ];
 
-    try {
+    if (mail($destinataire, $sujet, $message_client, $entete)) {
         mail($destinataire, $sujet, $message_client, $entete);
-    ?> <p class="confirmations_envoie"> Le courriel a été envoyé avec succès sur votre adresse. </p>
-<?php
-    } catch (Exception $e) {
-        echo "L'envoi du courriel a échoué.";
-    };
+    } else {
+        return "L'envoi du courriel a échoué.";
+    }
 }
 ?>

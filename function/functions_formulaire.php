@@ -47,6 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
     if (!isset($args["erreurs"])) { // si tableau erreur ne contient rien, alors envoie email
         email($args["valeurNetoyee"]);
+        $message["mail"] = email($args["valeurNetoyee"]);
         $args = [];
     }
 }
@@ -121,10 +122,9 @@ function email($args)
         "Content-Transfer-Encoding" => "quoted-printable"
     ];
 
-    try {
-        mail($destinataire, $sujet, $message_client, $entete);
-        echo "Le courriel a été envoyé avec succès.";
-    } catch (Exception $e) {
-        echo "L'envoi du courriel a échoué.";
-    };
+    if (mail($destinataire, $sujet, $message_client, $entete)) {
+        return "Le courriel a été envoyé avec succès.";
+    } else {
+        return "L'envoi du courriel a échoué.";
+    }
 }

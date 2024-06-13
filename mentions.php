@@ -1,13 +1,20 @@
 <?php
+require_once  __DIR__ . DIRECTORY_SEPARATOR . "config.php";
+require_once $chemin_sous_function . "gestionnaire_authentification.php";
+if (isset($_SESSION['donnee'])) {
+    require_once $chemin_sous_dossier . "navProfil.php";
+} else {
+    require_once $chemin_sous_dossier . "nav.php";
+}
 
-// require_once __DIR__ . DIRECTORY_SEPARATOR  . "nav.php";
-// $pageTitre = "Mentions légales";
-// $metaDescription = "copyright";
-// require_once __DIR__ . DIRECTORY_SEPARATOR  . "header.php";
+$pageTitre = "Mentions légales";
+$metaDescription = "texte et loi du site , copyright";
+require_once $chemin_sous_dossier . "header.php";
+
 ?>
 
 
-<main>
+<main id="mentions">
     <p>
     <h2>Conditions d'utilisation</h2>
 

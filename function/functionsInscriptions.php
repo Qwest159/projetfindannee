@@ -1,14 +1,6 @@
 <?php
 // echo '<pre>' . print_r($args, true) . '</pre>';
 
-// LANCER UNE ALERTE POUR VALIDER L'INSCRIPTION
-
-
-// CE QUI RESTE A FAIRE
-
-//uti_compte_active: Valeur booléenne par defaut à 1 (pour le moment on active le compte dès sa création).
-
-// uti_code_activation: Une valeur fixe de 5 caractères facultative.
 
 // modifier le mdp si l'utilisateur souhaite changer son mdp
 
@@ -34,7 +26,7 @@ $TableauxRegles = [
         "min" => 8,
         "max" => 72,
         "requis" => "",
-        "confirmations" => "mdpconfirmations"
+        "type" => "mdpconfirmations"
     ],
 ];
 
@@ -47,11 +39,6 @@ function generercode()
     return $nombres;
 }
 
-
-// while (donnee_identiquecode(55450, "uti_code_activation")) {
-// }
-// echo generercode();
-
 function coderepeat()
 {
     $codeactivation = generercode();
@@ -60,15 +47,6 @@ function coderepeat()
     }
     return $codeactivation;
 };
-
-
-
-
-
-
-
-
-
 
 // CONDITIONS finale pour envoier l'email ou la requete
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -101,9 +79,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
     if (!isset($args["erreurs"])) { // si tableau erreur ne contient rien, alors envoie email
-        echo "Félicitation, vous êtes inscrit";
+
         $args["valeurNetoyee"]["activation"] = coderepeat();
         inscriptions($args);
+        $message["inscriptions"] = "Félicitation, vous êtes inscrit";
         // echo '<pre>' . print_r($args, true) . '</pre>';
         $args = [];
     }
@@ -167,7 +146,7 @@ function envoie_erreur($champNettoyer, $key, $TableauxRegles, $args)
                     return "Votre $key n'est pas valide";
                 }
             }
-            if ($regle == "confirmations" && $valeur == "mdpconfirmations") {
+            if ($regle == "type" && $valeur == "mdpconfirmations") {
                 if (ConfirmationMdp($args["valeurNetoyee"]["Code"] ?? '', $champNettoyer)) {
                     return "Votre code de $key ne correspond pas";
                 }
@@ -180,31 +159,3 @@ function envoie_erreur($champNettoyer, $key, $TableauxRegles, $args)
         }
     }
 }
-
-
-//------------------EMAIL-------------
-// function email($args)
-// {
-//     $destinataire = "Claudy Focan <claudy.focan@dikkenek.be>";
-//     // Destinataire de l'email.
-//     $expediteur = $args["Nom"];
-//     $expediteur .= " " . $args["Prénom"];
-//     $expediteur .= " <" . $args["Email"] . ">";
-//     // Sujet de l'email.
-//     $sujet = "Le formulaire";
-//     $message_client = $args["Message"];
-
-//     $entete = [
-//         "From" => $expediteur,
-//         "MIME-Version" => "1.0",
-//         "Content-Type" => "text/html; charset=\"UTF-8\"",
-//         "Content-Transfer-Encoding" => "quoted-printable"
-//     ];
-
-//     try {
-//         mail($destinataire, $sujet, $message_client, $entete);
-//         echo "Le courriel a été envoyé avec succès.";
-//     } catch (Exception $e) {
-//         echo "L'envoi du courriel a échoué.";
-//     };
-// }

@@ -2,20 +2,23 @@
 require_once  __DIR__ . DIRECTORY_SEPARATOR . "config.php";
 require_once $chemin_sous_function . "gestionnaire_authentification.php";
 
-if (isset($_SESSION['donnee']) || isset($_SESSION['verif_connexion'])) {
+if (isset($_SESSION['donnee'])) {
     require_once $chemin_sous_dossier . "navProfil.php";
 } else {
     require_once $chemin_sous_dossier . "nav.php";
 }
 $pageTitre = "Contact";
-$metaDescription = "....";
+$metaDescription = "Page contact du site";
 require_once $chemin_sous_dossier . "header.php";
+require_once $chemin_sous_function . "functions_formulaire.php";
 
 ?>
 <main>
     <h1>Contact</h1>
 
-    <p class="confirmations_envoie"><?php require_once $chemin_sous_function . "functions_formulaire.php"; ?></p>
+    <p class="confirmations_envoie"><?=
+                                    ($message["mail"]) ?? "";
+                                    ?></p>
     <!-- <form action="/reponseformulaire.php" method="POST">  -->
     <form id="formulaire" method="POST" action="">
 
