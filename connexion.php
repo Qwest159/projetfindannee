@@ -18,7 +18,10 @@ if (isset($_SESSION['donnee'])) {
 ?>
 <main class="mise_en_page">
     <H1>Connexion</H1>
-    <p class="presentation">Plus qu'un pas à faire et vous serez connecté !
+    <p class="presentation">
+        Te voilà enfin sur la dernière étape
+        <br>
+        Plus qu'un pas à faire et vous serez connecté !
         <br>
         Identifiez-vous ci-dessous, bien évidemment.
     </p>
@@ -27,10 +30,7 @@ if (isset($_SESSION['donnee'])) {
                             ?>
     </p>
 
-
-
     <form id="formulaire" action="" method="POST">
-
 
         <label for="identifiant"> Votre Pseudo ou email:</label>
         <input type="text" name="identifiant" id="identifiant" placeholder="Votre identifiant" value="">
@@ -44,12 +44,6 @@ if (isset($_SESSION['donnee'])) {
 
 
     </form>
-    <p class="lieninscrit"><a href="/inscriptions.php"> Pas encore inscrit?</a></p>
+    <p class="pasinscrit"><a href="/inscriptions.php"> Pas encore inscrit?</a></p>
 </main>
 <?php require_once $chemin_sous_dossier . "footer.php"   ?>
-
-<!-- < POINTINTERROGATION php echo $args["valeurNetoyee"]["pseudo"] ?? "" ?> -->
-
-
-<!-- minlength="2" maxlength="72" -->
-<!-- minlength="2" maxlength="255" -->

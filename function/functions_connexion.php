@@ -1,15 +1,6 @@
 <?php
-// echo '<pre>' . print_r($args, true) . '</pre>';
-
-// echo '<pre>' . print_r($args, true) . '</pre>';
 
 
-// FUNCTION VERIFIER MDP POUR DECRYPTER LE MDP
-//https://www.php.net/manual/fr/function.password-hash.php
-//https://www.php.net/manual/fr/function.password-verify.php
-//car rechercher dans la base de donnée ne fonctionne pas en decryptant ligne:
-
-// Mettez le gestionnaire de formulaire à jour (mdp oublié)
 
 $TableauxRegles = [
     "identifiant" => [
@@ -52,21 +43,25 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $args["erreurs"]["autre"] = "champs inconnu";
         }
     }
-    if (!isset($args["erreurs"])) { // si tableau erreur ne contient rien, alors envoie email
-        // connexionpage($args["valeurNetoyee"], $TableauxRegles, $TableauxDB);
+    if (!isset($args["erreurs"])) {
+        // si le tableau erreur ne contient rien, alors execute ce que je veux
+
         if (connexionDB($args["valeurNetoyee"])) {
             $resultat = connexionDB($args["valeurNetoyee"]);
 
             $args = [];
+            // si l'utilisateur ne c'est jamais inscrit
             if ($resultat['uti_compte_active'] == 0) {
+                //creation session
                 connecter_uti("verif_connexion", $resultat);
                 emailcode($resultat);
                 header("Location: PremiereInscrit.php");
                 exit();
             } else {
+                //creation session
                 connecter_uti("donnee", $resultat);
                 header("Location: Profil.php");
-                // header("Location: . BASE_URL Profil.php");
+
                 exit();
             }
         } else {
@@ -124,10 +119,10 @@ function envoie_erreur($champNettoyer, $key, $TableauxRegles, $args)
         } else {
             //SI il y a une regle et que le paramettre en second est true 
             if ($regle == "min" && minimum($champNettoyer, $valeur)) {
-                return "Votre $key doit etre de minimum $valeur caractere";
+                return "Votre $key doit être de maximum $valeur caractère";
             }
             if ($regle == "max" && maximum($champNettoyer, $valeur)) {
-                return "Votre $key doit etre de maximum $valeur caractere";
+                return "Votre $key doit être de maximum $valeur caractère";
             }
             if ($regle == "type" && $valeur == "email") {
                 if (!(filter_var($champNettoyer, FILTER_VALIDATE_EMAIL))) {

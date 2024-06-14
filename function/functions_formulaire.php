@@ -1,5 +1,5 @@
 <?php
-// echo '<pre>' . print_r($keys, true) . '</pre>';
+
 $TableauxRegles = [
     // ATTENTION la key $TableauxRegles dois correspondre a l'input name
     "Nom" => [
@@ -45,7 +45,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $args["erreurs"]["autre"] = "champs inconnu";
         }
     }
-    if (!isset($args["erreurs"])) { // si tableau erreur ne contient rien, alors envoie email
+    if (!isset($args["erreurs"])) {
+        // si tableau erreur ne contient rien, alors envoie email
         email($args["valeurNetoyee"]);
         $message["mail"] = email($args["valeurNetoyee"]);
         $args = [];
@@ -89,10 +90,10 @@ function envoie_erreur($champNettoyer, $key, $TableauxRegles)
         } else {
             //SI il y a une regle et que le paramettre en second est true 
             if ($regle == "min" && minimum($champNettoyer, $valeur)) {
-                return "Votre $key doit etre de minimum $valeur caractere";
+                return "Votre $key doit être de maximum $valeur caractère";
             }
             if ($regle == "max" && maximum($champNettoyer, $valeur)) {
-                return "Votre $key doit etre de maximum $valeur caractere";
+                return "Votre $key doit être de maximum $valeur caractère";
             }
             if ($regle == "type" && $valeur == "email") {
                 if (!(filter_var($champNettoyer, FILTER_VALIDATE_EMAIL))) {

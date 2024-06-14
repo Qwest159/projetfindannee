@@ -15,8 +15,6 @@ if (file_exists($envPath)) {
             putenv(trim($line));
         }
     }
-} else {
-    echo "Fichier .env non trouvé à l'emplacement : $envPath";
 }
 // $env = file_get_contents($envPath);
 
@@ -45,11 +43,7 @@ function connexion()
 
     try {
         // Instancier une nouvelle connexion.
-        // $pdo = new PDO("mysql:host=$nomDuServeur;dbname=$nomBDD;charset=utf8", $nomUtilisateur, $motDePasse);
-        // $host = getenv("DBHOST");
-        // echo getenv("DBHOST");
-        // echo "test";
-        // echo '<pre>' . print_r($host, true) . '</pre>';
+
         $pdo = new PDO("mysql:host=" . getenv("DBHOST") . ";dbname=" . getenv("DBNAME") . ";charset=utf8", getenv("DBUSER"), getenv("DBPASSWORD"));
 
         // Définir le mode d'erreur sur "exception".
@@ -58,31 +52,24 @@ function connexion()
     }
     // Capturer les exceptions en cas d'erreur de connexion :
     catch (\PDOException $e) {
-        // echo $e;
-        // Afficher les potentielles erreurs rencontrées lors de la tentative de connexion à la base de données.
-        // Attention, les informations affichées ici pouvant être sensibles, cet affichage est uniquement destiné à la phase de développement.
+
         echo "Erreur d'exécution de requête : " . $e->getMessage() . PHP_EOL;
     }
 };
+
+//afficher les données pour test
 function donnée_du_serveur()
 {
     try {
         // Instancier la connexion à la base de données.
         $pdo = connexion();
 
-        // Cette requête interroge la table "t_utilisateur_uti" afin de retourner tous les utilisateurs.
+
         $table = "chris_php_projet";
         $requete = "SELECT * FROM $table";
 
-        // La méthode "query()" est utilisée pour exécuter une requête SQL qui retourne un jeu de résultats, ce qui est le cas des requêtes "SELECT".
-        // La méthode retourne "false" si la requête n'a rien trouvé.
         $stmt = $pdo->query($requete);
 
-        // La méthode "fetchAll()" permet de récupérer tous les éléments issues de la requête sous forme de tableau.
-        // Le paramètre "PDO::FETCH_ASSOC" permet de préciser que l'on désire obtenir des tableaux associatifs (nomColonne => valeur) plutôt que des objets.
-        // La méthode retourne un tableau vide si la requête n'a rien trouvé.
-        // Dans ce contexte, la requête retournera un tableau dans lequel chaque élément correspond à un utilisateur
-        // et où chaque utilisateur sera représenté par un tableau associatif comprenant toutes les informations de l'utilisateur.
         $utilisateurs = $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
         gerer_exceptions($e);
@@ -132,6 +119,7 @@ function inscriptions($args)
         }
     }
 }
+
 function mise_a_jour($id, $champs, $donnee)
 {
     try {
@@ -147,6 +135,8 @@ function mise_a_jour($id, $champs, $donnee)
         gerer_exceptions($e);
     }
 }
+
+//permet de verifier si une donnée existe déjà dans la base de données
 function donnee_identique($donnee, $champs)
 {
     try {
@@ -166,22 +156,22 @@ function donnee_identique($donnee, $champs)
         gerer_exceptions($e);
     }
     if (isset($estValide) && $estValide !== false) {
-        // $estvalide sera toujour true sauf s' il y une erreur dans le requete sql( exemple un nom de table mal ecrit)
+        // $estvalide sera toujour true sauf s'il y une erreur dans le requete sql( exemple un nom de table mal ecrit)
 
         // Récupérer l'utilisateur issu de la requête DE LA DB.
         $utilisateur = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (isset($utilisateur) && !empty($utilisateur)) {
-            // retourne true si il y a des données
+            // retourne true s'il y a des données
             return true;
         } else {
-            // retourne false s' il n'y a pas de données
+            // retourne false s'il n'y a pas de données
             return false;
         }
     }
 }
 
-
+// function pour la connexion de l'utilisateur
 function connexionDB($args)
 {
     if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -199,8 +189,6 @@ function connexionDB($args)
 
             $stmt->bindValue(':pseudo', $args["identifiant"], PDO::PARAM_STR);
 
-
-            // $stmt->bindValue(':mdp', $args["code"], PDO::PARAM_STR);
             // Exécuter la requête.
             $estValide = $stmt->execute();
         } catch (PDOException $e) {
@@ -212,8 +200,9 @@ function connexionDB($args)
             // Récupérer l'utilisateur issu de la requête DE LA DB.
             $utilisateur = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            //Permet de verifier si: utilisateur a une donnée et qu'elle correspond au mdp haché fourni
+            //Permet de verifier si: utilisateur à une donnée et qu'elle correspond au mdp haché fourni pour se connecter
             if (isset($utilisateur) && !empty($utilisateur) && password_verify($args["code"], $utilisateur['uti_motdepasse'])) {
+                //retourne les données de l'utilisateur que j'ai besoin 
                 return $utilisateur;
             } else {
                 false;
@@ -221,6 +210,8 @@ function connexionDB($args)
         }
     }
 }
+
+//function recuperer les données de l'utilisateur grace à l'id de l'utilisateur
 function recuputilisateurviaID($id)
 {
     if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -236,8 +227,6 @@ function recuputilisateurviaID($id)
 
             $stmt->bindValue(':iduser', $id, PDO::PARAM_STR);
 
-
-            // $stmt->bindValue(':mdp', $args["code"], PDO::PARAM_STR);
             // Exécuter la requête.
             $estValide = $stmt->execute();
         } catch (PDOException $e) {
@@ -249,7 +238,6 @@ function recuputilisateurviaID($id)
             // Récupérer l'utilisateur issu de la requête DE LA DB.
             $utilisateur = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            //Permet de verifier si: utilisateur a une donnée et qu'elle correspond au mdp haché fourni
             if (isset($utilisateur) && !empty($utilisateur)) {
                 return $utilisateur;
             } else {
@@ -259,7 +247,7 @@ function recuputilisateurviaID($id)
     }
 }
 
-// ---------EMAIL--------
+// ----------------EMAIL-----------------
 
 function emailcode($args)
 {

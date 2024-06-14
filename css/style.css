@@ -7,6 +7,7 @@ fieldset {
 
 body {
   background-color: rgb(198, 198, 198);
+  word-wrap: break-word;
 }
 .active {
   color: rgb(0, 13, 255);
@@ -54,6 +55,7 @@ main.mise_en_page p.presentation {
   margin: auto;
   width: 60%;
   margin-bottom: 1em;
+  line-height: 1.2em;
 }
 main {
   margin-top: 6em;
@@ -87,6 +89,7 @@ form:not(form#deconnexion) {
   border-radius: 10px;
   text-align: center;
   box-shadow: 0 0 15px cornflowerblue;
+  padding: 1.5em;
 }
 form:not(form#deconnexion):nth-of-type(n + 2) {
   margin-top: 1em;
@@ -128,7 +131,18 @@ textarea {
 .lieninscrit a:hover {
   color: rgb(0, 76, 255);
 }
-
+.pasinscrit,
+.pasinscrit a {
+  text-align: center;
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.2em;
+  margin: 2.5em 0;
+}
+.pasinscrit a:hover {
+  color: rgb(0, 76, 255);
+}
 /* ---------------FOOTER--------------  */
 footer {
   margin-top: 2.5em;

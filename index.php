@@ -1,11 +1,7 @@
 <?php
 require_once  __DIR__ . DIRECTORY_SEPARATOR . "config.php";
 require_once $chemin_sous_function . "gestionnaire_authentification.php";
-if (isset($_SESSION['donnee'])) {
-    require_once $chemin_sous_dossier . "navProfil.php";
-} else {
-    require_once $chemin_sous_dossier . "nav.php";
-}
+require_once $chemin_sous_dossier . "nav.php";
 
 $pageTitre = "Page d'accueil";
 $metaDescription = "Page d'accueil du projet d'un élève Ifosup contenant un formulaire ....";

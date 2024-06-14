@@ -1,8 +1,4 @@
 <?php
-// echo '<pre>' . print_r($args, true) . '</pre>';
-
-
-// modifier le mdp si l'utilisateur souhaite changer son mdp
 
 $TableauxRegles = [
     "Pseudo" => [
@@ -38,7 +34,7 @@ function generercode()
     }
     return $nombres;
 }
-
+//création du code de verification pour code active 
 function coderepeat()
 {
     $codeactivation = generercode();
@@ -59,15 +55,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $champNettoyer = netoyageCharactere($postChamp);
             $args["valeurNetoyee"][$nomChamp] = $champNettoyer;
 
-            // echo '<pre>' . print_r($args["valeurNetoyee"], true) . '</pre>';
-
             $erreur = envoie_erreur($champNettoyer, $nomChamp, $TableauxRegles, $args);
 
             if ($nomChamp === "Confirmations") {
                 $args["valeurNetoyee"][$nomChamp] = mdphackage($champNettoyer);
             };
-
-            // echo '<pre>' . print_r($args, true) . '</pre>';
 
             // si la function renvoie quelque chose, alors mets le dans le tableau qui correspond au nom du champs
             if (isset($erreur)) {
@@ -83,7 +75,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $args["valeurNetoyee"]["activation"] = coderepeat();
         inscriptions($args);
         $message["inscriptions"] = "Félicitation, vous êtes inscrit";
-        // echo '<pre>' . print_r($args, true) . '</pre>';
         $args = [];
     }
 }
@@ -134,12 +125,12 @@ function envoie_erreur($champNettoyer, $key, $TableauxRegles, $args)
                 return "Votre $key est manquant";
             }
         } else {
-            //SI il y a une regle et que le paramettre en second est true 
+
             if ($regle == "min" && minimum($champNettoyer, $valeur)) {
-                return "Votre $key doit etre de minimum $valeur caractere";
+                return "Votre $key doit être de maximum $valeur caractère";
             }
             if ($regle == "max" && maximum($champNettoyer, $valeur)) {
-                return "Votre $key doit etre de maximum $valeur caractere";
+                return "Votre $key doit être de maximum $valeur caractère";
             }
             if ($regle == "type" && $valeur == "email") {
                 if (!(filter_var($champNettoyer, FILTER_VALIDATE_EMAIL))) {

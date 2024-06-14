@@ -1,15 +1,12 @@
 <?php
 require_once  __DIR__ .  DIRECTORY_SEPARATOR . "config.php";
-if (isset($_SESSION['donnee'])) {
-    require_once $chemin_sous_dossier . "navProfil.php";
-} else {
-    require_once $chemin_sous_dossier . "nav.php";
-}
+require_once $chemin_sous_function . "gestionnaire_authentification.php";
+require_once $chemin_sous_dossier . "nav.php";
 require_once $chemin_sous_dossier . "header.php";
 $pageTitre = "Activation";
 $metaDescription = "page premiere inscription";
 require_once $chemin_sous_function . "DB_connexion.php";
-require_once $chemin_sous_function . "gestionnaire_authentification.php";
+
 require_once $chemin_sous_function . "functionsPremiereinscrit.php";
 
 

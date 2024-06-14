@@ -1,6 +1,4 @@
 <?php
-
-
 $TableauxRegles = [
     "validation" => [
         "min" => 5,
@@ -50,12 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["codebase"])) {
             $champNettoyer = netoyageCharactere($postChamp);
             $args["valeurNetoyee"][$nomChamp] = $champNettoyer;
 
-            // echo '<pre>' . print_r($args["valeurNetoyee"], true) . '</pre>';
-
             $erreur = envoie_erreur($champNettoyer, $nomChamp, $TableauxRegles, $args);
-
-            // echo '<pre>' . print_r($args, true) . '</pre>';
-
             // si la function renvoie quelque chose, alors mets le dans le tableau qui correspond au nom du champs
             if (isset($erreur)) {
                 $args["erreurs"][$nomChamp] = $erreur;
@@ -72,7 +65,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["codebase"])) {
         $args = [];
         connecter_uti("donnee", $donnee);
         header("Location: Profil.php");
-        // echo '<pre>' . print_r($args, true) . '</pre>';
     }
 }
 
@@ -132,22 +124,17 @@ function envoie_erreur($champNettoyer, $key, $TableauxRegles, $args)
                 return "Votre $key est manquant";
             }
         } else {
-            //SI il y a une regle et que le paramettre en second est true 
             if ($regle == "min" && minimum($champNettoyer, $valeur)) {
-                return "Votre $key doit etre $valeur caractere";
+                return "Votre $key doit être de maximum $valeur caractère";
             }
             if ($regle == "max" && maximum($champNettoyer, $valeur)) {
-                return "Votre $key doit etre de maximum $valeur caractere";
+                return "Votre $key doit être de maximum $valeur caractère";
             }
             if ($regle == "nomDB" && ($valeur == "uti_email")) {
                 if (!donnee_identique($champNettoyer, $valeur)) {
-                    return "Votre $key n'est pas la bonne";
+                    return "Votre $key n'est pas correct";
                 }
             }
-            // if (!is_numeric($champNettoyer)) {
-            //     return "Votre $key doit etre composé que de chiffre";
-            // }
-
             if ($regle == "type" && $valeur == "email") {
                 if (!(filter_var($champNettoyer, FILTER_VALIDATE_EMAIL))) {
                     return "Votre $key n'est pas valide";

@@ -20,7 +20,12 @@
             <ul>
                 <li id="cacher"><a href="/"><img src="/sous_dossier/img/LogoPHP2024.png" alt="">
                     </a></li>
-                <?= $nav ?>
+
+                <?php if (isset($_SESSION['donnee'])) {
+                    echo  $navprofil;
+                } else {
+                    echo $nav;
+                } ?>
 
             </ul>
         </nav>

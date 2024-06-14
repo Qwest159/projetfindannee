@@ -2,9 +2,6 @@
 function nav(string $chemin, string $nom_lien): string
 {
     // mettre balise pre pour lire le $_serveur (tres pratique pour recup les données)
-    //echo "<pre>"; 
-    //print_r($_SERVER,true);
-    //echo "</pre>";
 
     // $_SERVER['REQUEST_URI'] => permet de prendre le chemin sur lequel on est(plus precisement, le chemin apres le domaine dans URL)
     if ($_SERVER['REQUEST_URI'] === $chemin) {
@@ -23,4 +20,18 @@ $nav =  nav("/", "Accueil") .
     nav("/contact.php", "Contact") .
     nav("/inscriptions.php", "Inscriptions") .
     nav("/connexion.php", "Connexion");
+
+$navprofil =  nav("/", "Accueil") .
+    nav("/contact.php", "Contact") .
+    nav("/Profil.php", "Profil");
+ob_start();
+?>
+<li>
+    <form id="deconnexion" method="post" action="">
+        <input type="hidden" name="deconnection" value="toto">
+        <input name="deco" type="submit" value="Deconnexion">
+    </form>
+</li>
+<?php
+$navprofil .= ob_get_clean();
 ?>

@@ -6,4 +6,7 @@
     align-self: center;
     width: 70%;
   }
+  header nav ul {
+    padding: 1.45em 0;
+  }
 }

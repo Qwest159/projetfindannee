@@ -1,12 +1,8 @@
 <?php
 require_once  __DIR__ . DIRECTORY_SEPARATOR . "config.php";
 require_once $chemin_sous_function . "gestionnaire_authentification.php";
+require_once $chemin_sous_dossier . "nav.php";
 
-if (isset($_SESSION['donnee'])) {
-    require_once $chemin_sous_dossier . "navProfil.php";
-} else {
-    require_once $chemin_sous_dossier . "nav.php";
-}
 $pageTitre = "Contact";
 $metaDescription = "Page contact du site";
 require_once $chemin_sous_dossier . "header.php";
@@ -21,7 +17,7 @@ require_once $chemin_sous_function . "functions_formulaire.php";
     <p class="confirmations_envoie"><?=
                                     ($message["mail"]) ?? "";
                                     ?></p>
-    <!-- <form action="/reponseformulaire.php" method="POST">  -->
+
     <form id="formulaire" method="POST" action="">
 
         <label for="nom">Votre Nom :</label>

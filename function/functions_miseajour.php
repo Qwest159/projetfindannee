@@ -1,9 +1,4 @@
 <?php
-// echo '<pre>' . print_r($args, true) . '</pre>';
-
-// modifier le mdp si l'utilisateur souhaite changer son mdp
-
-
 
 $TableauxRegles_profil = [
     "pseudo" => [
@@ -48,7 +43,10 @@ function coderepeat()
     return $codeactivation;
 };
 
+
 // CONDITIONS finale pour envoier l'email ou la requete
+
+// --------FONCTION POUR PROFIL------
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["profil"])) {
     $args = [];
     foreach ($TableauxRegles_profil as $nomChamp => $champ) {
@@ -59,11 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["profil"])) {
             $champNettoyer = netoyageCharactere($postChamp);
             $args["valeurNetoyee"][$nomChamp] = $champNettoyer;
 
-            // echo '<pre>' . print_r($args["valeurNetoyee"], true) . '</pre>';
-
             $erreur = envoie_erreur($champNettoyer, $nomChamp, $TableauxRegles_profil, $args);
-
-            // echo '<pre>' . print_r($args, true) . '</pre>';
 
             // si la function renvoie quelque chose, alors mets le dans le tableau qui correspond au nom du champs
             if (isset($erreur)) {
@@ -75,19 +69,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["profil"])) {
         }
     }
     if (!isset($args["erreurs"])) {
-        // si tableau erreur ne contient rien, 
+        // si tableau erreur ne contient rien
         $message["profil"] = "Félicitation, votre profil vient de changer";
+        //mettre les données de la varibale dans $donnee
         $donnee = uti_enligne("donnee");
         mise_a_jour($donnee["uti_id"], "uti_pseudo", $args["valeurNetoyee"]["pseudo"]);
         $args = [];
+        // recup id pour réatribuer la vrai variable avec les bonnes données
         $donnees = recuputilisateurviaID($donnee["uti_id"]);
         connecter_uti("donnee", $donnees);
-
-        // echo '<pre>' . print_r($args, true) . '</pre>';
     }
 }
 
-
+// -----FORM POUR EMAIL-----
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["emails"])) {
 
     $args = [];
@@ -99,12 +93,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["emails"])) {
             $champNettoyer = netoyageCharactere($postChamp);
             $args["valeurNetoyee"][$nomChamp] = $champNettoyer;
 
-            // echo '<pre>' . print_r($args["valeurNetoyee"], true) . '</pre>';
 
             $erreur = envoie_erreur($champNettoyer, $nomChamp, $TableauxRegles_email, $args);
-
-            // echo '<pre>' . print_r($args, true) . '</pre>';
-
             // si la function renvoie quelque chose, alors mets le dans le tableau qui correspond au nom du champs
             if (isset($erreur)) {
                 $args["erreurs"][$nomChamp] = $erreur;
@@ -135,15 +125,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["mdp"])) {
             $champNettoyer = netoyageCharactere($postChamp);
             $args["valeurNetoyee"][$nomChamp] = $champNettoyer;
 
-            // echo '<pre>' . print_r($args["valeurNetoyee"], true) . '</pre>';
-
             $erreur = envoie_erreur($champNettoyer, $nomChamp, $TableauxRegles_mdp, $args);
 
             if ($nomChamp === "Confirmations") {
                 $args["valeurNetoyee"][$nomChamp] = mdphackage($champNettoyer);
             };
-
-            // echo '<pre>' . print_r($args, true) . '</pre>';
 
             // si la function renvoie quelque chose, alors mets le dans le tableau qui correspond au nom du champs
             if (isset($erreur)) {
@@ -156,14 +142,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["mdp"])) {
     }
     if (!isset($args["erreurs"])) {
         $message["mdp"] = "Félicitation, votre mot de passe vient de changer";
-        // si tableau erreur ne contient rien, 
+        // si tableau erreur ne contient rien 
         $donnee = uti_enligne("donnee");
         mise_a_jour($donnee["uti_id"], "uti_motdepasse", $args["valeurNetoyee"]["Confirmations"]);
         $args = [];
         $donnees = recuputilisateurviaID($donnee["uti_id"]);
         connecter_uti("donnee", $donnees);
-
-        // echo '<pre>' . print_r($args, true) . '</pre>';
     }
 }
 
@@ -218,10 +202,10 @@ function envoie_erreur($champNettoyer, $key, $TableauxRegles, $args)
         } else {
             //SI il y a une regle et que le paramettre en second est true 
             if ($regle == "min" && minimum($champNettoyer, $valeur)) {
-                return "Votre $key doit etre $valeur caractere";
+                return "Votre $key doit être de maximum $valeur caractère";
             }
             if ($regle == "max" && maximum($champNettoyer, $valeur)) {
-                return "Votre $key doit etre de maximum $valeur caractere";
+                return "Votre $key doit être de maximum $valeur caractère";
             }
             if ($regle == "type" && $valeur == "email") {
                 if (!(filter_var($champNettoyer, FILTER_VALIDATE_EMAIL))) {
@@ -230,7 +214,7 @@ function envoie_erreur($champNettoyer, $key, $TableauxRegles, $args)
             }
             if ($regle == "nomDB") {
                 if (donnee_identique($champNettoyer, $valeur)) {
-                    return "Le $key existe déja";
+                    return "votre $key existe déja";
                 }
             }
             if ($regle == "type" && $valeur == "mdpconfirmations") {
