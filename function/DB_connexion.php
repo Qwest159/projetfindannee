@@ -281,7 +281,7 @@ function emailcode($args)
     ];
 
     if (mail($destinataire, $sujet, $message_client, $entete)) {
-        mail($destinataire, $sujet, $message_client, $entete);
+        "";
     } else {
         return "L'envoi du courriel a échoué.";
     }

@@ -73,8 +73,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             ob_start();
 ?>
 
-            <p>Vous n'avez pas l'air d'être inscrit.</p>
-            <p>Si vous le voulez, c'est par ici => <a href="/inscriptions.php">Inscriptions</a></p>
+            Vous n'avez pas l'air d'être inscrit.<br>
+            Si vous le voulez, c'est par ici => <a href="/inscriptions.php">Inscriptions</a>
 
 <?php
             // Récupérer le contenu mis en mémoire tampon et le stocker dans une variable

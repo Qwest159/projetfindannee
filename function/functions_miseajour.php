@@ -76,6 +76,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["profil"])) {
     }
     if (!isset($args["erreurs"])) {
         // si tableau erreur ne contient rien, 
+        $message["profil"] = "Félicitation, votre profil vient de changer";
         $donnee = uti_enligne("donnee");
         mise_a_jour($donnee["uti_id"], "uti_pseudo", $args["valeurNetoyee"]["pseudo"]);
         $args = [];
@@ -114,7 +115,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["emails"])) {
         }
     }
     if (!isset($args["erreurs"])) {
-
+        $message["email"] = "Félicitation, votre email vient de changer";
         $id = uti_enligne("donnee")['uti_id'];
         mise_a_jour($id, "uti_email", $args["valeurNetoyee"]["email"]);
         $donnees = recuputilisateurviaID($id);
@@ -154,6 +155,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["mdp"])) {
         }
     }
     if (!isset($args["erreurs"])) {
+        $message["mdp"] = "Félicitation, votre mot de passe vient de changer";
         // si tableau erreur ne contient rien, 
         $donnee = uti_enligne("donnee");
         mise_a_jour($donnee["uti_id"], "uti_motdepasse", $args["valeurNetoyee"]["Confirmations"]);

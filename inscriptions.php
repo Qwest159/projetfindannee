@@ -22,11 +22,14 @@ if (isset($_SESSION['donnee'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
-<main>
+<main class="mise_en_page">
 
     <body>
 
         <H1>Inscriptions</H1>
+        <p class="presentation">Vous souhaitez vous inscrire ?<br>
+            Vous avez bien raison ! Profitez-en ^_^</p>
+
 
         <p class="confirmations_envoie"><?=
                                         ($message["inscriptions"]) ?? "";

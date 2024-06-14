@@ -13,8 +13,10 @@ require_once $chemin_sous_dossier . "header.php";
 require_once $chemin_sous_function . "functions_formulaire.php";
 
 ?>
-<main>
+<main class="mise_en_page">
     <h1>Contact</h1>
+
+    <p class="presentation">Un souci et vous souhaitez nous contacter ?<br> Remplissez le formulaire et nous vous répondrons au plus vite.</p>
 
     <p class="confirmations_envoie"><?=
                                     ($message["mail"]) ?? "";

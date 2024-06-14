@@ -19,18 +19,30 @@ if (!isset($_SESSION['donnee'])) {
 <main>
     <h2>Bonjour <?= uti_enligne("donnee")['uti_pseudo'] ?>,<?= uti_enligne("donnee")['uti_email'] ?></h2>
 
-    <h1>Changement des donnees de profil</h1>
+    <h1>Mise à jour de vos données personnelles</h1>
 
-    <p class="confirmations_envoie"><?=
-                                    ($message["profil"]) ?? "";
-                                    ?></p>
+    <p class="confirmations_envoie">
+        <?=
+        ($message["profil"]) ?? "";
+        ?>
+    </p>
+    <p class="confirmations_envoie">
+        <?=
+        ($message["email"]) ?? "";
+        ?>
+    </p>
+    <p class="confirmations_envoie">
+        <?=
+        ($message["mdp"]) ?? "";
+        ?>
+    </p>
 
     <form id="formulaire" action="" method="post">
-        <p>Veuillez confirmer le code ci dessous recu par email</p>
+        <h3>Changement du nom de profil</h3>
         <input type="hidden" name="profil" value="profile">
 
-        <label for="validation">Entrez votre code</label>
-        <input type="texte" name="pseudo" id="">
+        <label for="pseudo">Entrez votre nouveau profil</label>
+        <input type="texte" name="pseudo" id="pseudo">
 
         <p class="erreur">
             <?=
@@ -43,11 +55,13 @@ if (!isset($_SESSION['donnee'])) {
 
     <form id="formulairerenvoie" method="post" action="">
 
-        <h3>Vous n'avez pas recu de courrier?
-        </h3>
-        <p> Remarquez votre émail ci-dessous</p>
+        <h3>Changement de l'email</h3>
+
+        <label for="email">Entrez votre nouvelle email</label>
+
+
         <input type="hidden" name="emails" value="tutu">
-        <input type="texte" name="email" id="">
+        <input type="texte" name="email" id="email">
         <p class="erreur">
             <?=
             ($args["erreurs"]["email"]) ?? "";
@@ -58,6 +72,10 @@ if (!isset($_SESSION['donnee'])) {
 
 
     <form id="formulairerenvoie" method="post" action="">
+
+        <h3>Changement du mot de passe</h3>
+
+
 
         <input type="hidden" name="mdp" value="toto">
 

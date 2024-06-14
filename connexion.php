@@ -16,11 +16,17 @@ if (isset($_SESSION['donnee'])) {
 }
 
 ?>
-<main>
+<main class="mise_en_page">
     <H1>Connexion</H1>
-    <div class="lieninscrit"><?=
-                                ($message["connexion"]) ?? "";
-                                ?></div>
+    <p class="presentation">Plus qu'un pas à faire et vous serez connecté !
+        <br>
+        Identifiez-vous ci-dessous, bien évidemment.
+    </p>
+    <p class="lieninscrit"><?=
+                            ($message["connexion"]) ?? "";
+                            ?>
+    </p>
+
 
 
     <form id="formulaire" action="" method="POST">

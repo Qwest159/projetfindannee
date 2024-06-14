@@ -18,7 +18,7 @@
     <header>
         <nav>
             <ul>
-                <li><a href="/"><img src="/sous_dossier/img/LogoPHP2024.png" alt="">
+                <li id="cacher"><a href="/"><img src="/sous_dossier/img/LogoPHP2024.png" alt="">
                     </a></li>
                 <?= $nav ?>
 

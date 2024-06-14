@@ -1,0 +1,9 @@
+@media screen and (max-width: 750px) {
+  #cacher {
+    display: none;
+  }
+  main.mise_en_page figure {
+    align-self: center;
+    width: 70%;
+  }
+}

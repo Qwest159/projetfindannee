@@ -14,10 +14,11 @@ body {
 
 /* ---------------NAVIGATION------------ */
 header nav {
-  background-color: rgba(0, 0, 0, 0.167);
+  background-color: rgba(0, 0, 0, 0.83);
   position: fixed;
   top: 0;
   width: 100%;
+  font-weight: 700;
 }
 header nav ul {
   display: flex;
@@ -36,25 +37,31 @@ header nav img {
   width: 3.5em;
 }
 /* -----------MAIN----------- */
-.mise_en_page {
+main.mise_en_page {
   display: flex;
   flex-direction: column;
 }
-.mise_en_page figure {
-  margin: auto;
+main.mise_en_page figure {
+  align-self: center;
+  width: 40%;
 }
-.mise_en_page img {
+main.mise_en_page img {
   width: 100%;
   height: auto;
 }
-.mise_en_page p {
+main.mise_en_page p.presentation {
   text-align: center;
+  margin: auto;
+  width: 60%;
+  margin-bottom: 1em;
 }
 main {
   margin-top: 6em;
 }
 h1 {
   text-align: center;
+  font-size: 2.2em;
+  margin-bottom: 1em;
 }
 .confirmations_envoie {
   color: rgb(15, 166, 4);
@@ -79,8 +86,11 @@ form:not(form#deconnexion) {
   border: solid rgb(0, 255, 251) 6px;
   border-radius: 10px;
   text-align: center;
+  box-shadow: 0 0 15px cornflowerblue;
 }
-
+form:not(form#deconnexion):nth-of-type(n + 2) {
+  margin-top: 1em;
+}
 form input {
   width: 18em;
   margin-top: 1em;
@@ -101,6 +111,7 @@ form p {
   margin-top: 0.5em;
   margin-bottom: 0.5em;
 }
+
 textarea {
   width: 18em;
   resize: none;

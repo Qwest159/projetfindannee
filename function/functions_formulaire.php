@@ -123,6 +123,7 @@ function email($args)
     ];
 
     if (mail($destinataire, $sujet, $message_client, $entete)) {
+
         return "Le courriel a été envoyé avec succès.";
     } else {
         return "L'envoi du courriel a échoué.";
