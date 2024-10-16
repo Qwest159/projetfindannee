@@ -1,5 +1,5 @@
 <?php
-require_once  __DIR__ .  DIRECTORY_SEPARATOR . "config.php";
+require_once  __DIR__ . DIRECTORY_SEPARATOR . ".." .  DIRECTORY_SEPARATOR .   "config.php";
 require_once  $chemin_sous_dossier . "nav.php";
 $pageTitre = "Connexion Client";
 $metaDescription = "Page connexion du site";
@@ -19,7 +19,7 @@ if (isset($_SESSION['donnee'])) {
 <main class="mise_en_page">
     <H1>Connexion</H1>
     <p class="presentation">
-        Te voilà enfin sur la dernière étape
+        Vous voilà enfin sur la dernière étape
         <br>
         Plus qu'un pas à faire et vous serez connecté !
         <br>

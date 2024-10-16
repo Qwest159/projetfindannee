@@ -1,5 +1,5 @@
 <?php
-require_once  __DIR__ . DIRECTORY_SEPARATOR . "config.php";
+require_once  __DIR__ . DIRECTORY_SEPARATOR . ".." .  DIRECTORY_SEPARATOR .   "config.php";
 require_once $chemin_sous_dossier . "nav.php";
 $pageTitre = "Inscriptions";
 $metaDescription = "Page inscirptions du site";
